@@ -4,9 +4,9 @@ Este repositório contém o projeto para a composição de notas da disciplina d
 ## Integrantes
 
 - Larissa Beatriz
-- Pedro Henrique
+- Pedro Oliveira
 - Marcella Maria
-- Laysa Vasconselos
+- Laysa Vasconcelos
 - Ana Beatriz
 
 ## Descrição do Projeto
