@@ -15,5 +15,5 @@ Este repositório contém o projeto para a composição de notas da disciplina d
 
 ## Tecnologias Utilizadas
 
-- [Replit] - Plataforma de programação
+- [VSCode] - Plataforma de programação
 - [GitHub] - Plataforma de controle de versão, hospedagem, colaboração e gerenciamento
