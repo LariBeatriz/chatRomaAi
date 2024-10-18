@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Função para obter o nome do usuário do Local Storage
+        function getUsernameFromLocalStorage() {
+            return localStorage.getItem('username');
+        }
+
+        const username = getUsernameFromLocalStorage(); // Pega o nome do usuário
+        document.addEventListener('DOMContentLoaded', () => {
+            if (username) {
+                const welcomeMessage = `Bem-vindo, ${username}!`;
+                const item = document.createElement('li');
+                item.textContent = welcomeMessage;
+                document.getElementById('messages').appendChild(item);
+            } else {
+                alert('Erro: Nome de usuário não encontrado.');
+                window.location.href = '/index.html'; // Voltar para a tela de login caso o nome não esteja disponível
+            }
+        });
+
+        function enviarMensagem() {
+            const input = document.getElementById('m');
+            const mensagem = `${username}: ${input.value}`; // Adiciona o nome do usuário à mensagem
+            if (input.value.trim() !== '') { // Verifica se a mensagem não está vazia
+                socket.emit('chat message', mensagem);
+                input.value = '';
+            }
+            return false;
+        }
+
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            document.getElementById('messages').appendChild(item);
+        });
+
+        // Enviar mensagem ao pressionar ENTER
+        document.getElementById('m').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Impede o envio do formulário
+                enviarMensagem(); // Chama a função para enviar a mensagem
+            }
+        });
+    </script>
+</head>
+<body>
+    <ul id="messages"></ul>
+    <form onsubmit="return enviarMensagem();">
+        <input id="m" autocomplete="off" /><button>Enviar</button>
+    </form>
+</body>
+</html>
