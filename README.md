@@ -7,7 +7,7 @@ Este repositório contém o projeto para a composição de notas da disciplina d
 - Pedro Oliveira
 - Marcella Maria
 - Laysa Vasconcelos
-- Ana Beatriz
+- Ana Beatriz.
 
 ## Descrição do Projeto
 
