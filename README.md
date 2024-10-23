@@ -1,4 +1,4 @@
-# Chat-Roma-Ai
+# chatRomaAi
 Este repositório contém o projeto para a composição de notas da disciplina de Sistemas Distribuídos do curso de Análise e Desenvolvimento de Sistemas da Faculdade Nova Roma.
 
 ## Integrantes
