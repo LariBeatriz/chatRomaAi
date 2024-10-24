@@ -1,19 +1,47 @@
-# Chat-Roma-Ai
-Este repositório contém o projeto para a composição de notas da disciplina de Sistemas Distribuídos do curso de Análise e Desenvolvimento de Sistemas da Faculdade Nova Roma.
+# Chat Application
 
-## Integrantes
+Este é um aplicativo de chat em tempo real com integração da API OpenAI.
 
-- Larissa Beatriz
-- Pedro Oliveira
-- Marcella Maria
-- Laysa Vasconcelos
-- Ana Beatriz
+## Requisitos
 
-## Descrição do Projeto
+- Node.js
+- npm
 
-[Escreva aqui uma breve descrição do que se trata o projeto, incluindo seu objetivo principal e a solução proposta.]
+## Instalação
 
-## Tecnologias Utilizadas
+1. Clone este repositório
+2. Navegue até a pasta do projeto
+3. Execute `npm install` para instalar as dependências
 
-- [VSCode] - Plataforma de programação
-- [GitHub] - Plataforma de controle de versão, hospedagem, colaboração e gerenciamento
+## Configuração
+
+1. Crie um arquivo `.env` na raiz do projeto
+2. Adicione sua chave da API OpenAI ao arquivo `.env`:   ```
+   OPENAI_API_KEY=sua_chave_api_aqui   ```
+
+## Executando o aplicativo
+
+Para iniciar o servidor e abrir automaticamente a página de login no navegador:
+
+1. No terminal, navegue até a pasta do projeto
+2. Execute o comando:   ```
+   node servidor/server.js   ```
+3. O servidor será iniciado na porta 3000 e a página de login será aberta automaticamente no seu navegador padrão
+
+## Funcionalidades
+
+- Login e registro de usuários
+- Chat em tempo real
+- Integração com a API OpenAI para respostas automáticas
+- Lista de usuários online
+
+## Estrutura do projeto
+
+- `servidor/server.js`: Arquivo principal do servidor
+- `login/index.html`: Página de login e registro
+- `tela-chat/chat-socketio.html`: Interface do chat
+- `tela-chat/chat.js`: Lógica do cliente para o chat
+
+## Notas
+
+Este projeto é apenas para fins de demonstração e não deve ser usado em produção sem implementar medidas de segurança adequadas, como autenticação segura e armazenamento criptografado de senhas.
