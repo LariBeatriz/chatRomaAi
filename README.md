@@ -1,4 +1,4 @@
-# chatRomaAi
+# Chat-Roma-Ai
 Este repositório contém o projeto para a composição de notas da disciplina de Sistemas Distribuídos do curso de Análise e Desenvolvimento de Sistemas da Faculdade Nova Roma.
 
 ## Integrantes
@@ -7,7 +7,7 @@ Este repositório contém o projeto para a composição de notas da disciplina d
 - Pedro Oliveira
 - Marcella Maria
 - Laysa Vasconcelos
-- Ana Beatriz.
+- Ana Beatriz
 
 ## Descrição do Projeto
 
