@@ -98,12 +98,13 @@
                 password: password
             };
 
-            // Armazena o nome de usuário no localStorage do navegador
+            // Armazena o nome de usuário e a senha no localStorage do navegador
             localStorage.setItem('username', username);
+            localStorage.setItem('password', password); // Adicionando a senha ao localStorage
 
             // Exibe uma mensagem de sucesso e redireciona para a página de chat
             alert("Usuário registrado com sucesso!");
-            window.location.href = `/chat-socketio.html?username=${encodeURIComponent(username)}`;
+            window.location.href = `/tela-chat/chat-socketio.html?username=${encodeURIComponent(username)}`;
         });
 
         // Função de login, vinculada ao evento de submissão do formulário de login
@@ -122,7 +123,7 @@
             if (username === storedUsername && password === storedPassword) {
                 alert("Login bem-sucedido!");
                 // Redireciona para a página de chat
-                window.location.href = `/chat-socketio.html?username=${encodeURIComponent(username)}`;
+                window.location.href = `/tela-chat/chat-socketio.html?username=${encodeURIComponent(username)}`;
             } else {
                 alert("Usuário ou senha incorretos.");
             }
