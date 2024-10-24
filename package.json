@@ -1,0 +1,18 @@
+{
+  "name": "seu-projeto",
+  "version": "1.0.0",
+  "description": "Este repositório contém o projeto para a composição de notas da disciplina de Sistemas Distribuídos do curso de Análise e Desenvolvimento de Sistemas da Faculdade Nova Roma.",
+  "main": "index.js",
+  "scripts": {
+    "start-sktio": "node ./servidor/server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "socket.io": "^4.8.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
