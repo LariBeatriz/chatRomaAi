@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+        const socket = io(); // Inicializa a conexão do Socket.IO
+
+        // Função para obter o nome do usuário do Local Storage
+        function getUsernameFromLocalStorage() {
+            return localStorage.getItem('username'); // Retorna o nome do usuário armazenado
+        }
+
+        const username = getUsernameFromLocalStorage(); // Pega o nome do usuário
+        document.addEventListener('DOMContentLoaded', () => { // Aguarda o carregamento do DOM
+            if (username) { // Verifica se o nome do usuário está disponível
+                const welcomeMessage = `Bem-vindo, ${username}!`;
+                const item = document.createElement('li');
+                item.textContent = welcomeMessage;
+                document.getElementById('messages').appendChild(item); // Adiciona o item à lista de mensagens
+            } else {
+                alert('Erro: Nome de usuário não encontrado.'); // Alerta se o nome não for encontrado
+                window.location.href = '/index.html'; // Volta para a tela de login
+            }
+        });
+
+        // Função para enviar a mensagem
+        function enviarMensagem() {
+            const input = document.getElementById('m');
+            const mensagem = `${username}: ${input.value}`;
+            if (input.value.trim() !== '') {
+                socket.emit('chat message', mensagem);
+                input.value = '';
+            }
+            return false;
+        }
+
+        // Evento que escuta as mensagens recebidas do servidor
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            document.getElementById('messages').appendChild(item);
+        });
+
+        // Enviar mensagem ao pressionar ENTER
+        document.getElementById('m').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                enviarMensagem
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <ul id="messages"></ul> <!-- Lista para exibir as mensagens do chat -->
+    <form onsubmit="return enviarMensagem();"> <!-- Formulário para enviar mensagens -->
+        <input id="m" autocomplete="off" /> <!-- Campo de entrada para a mensagem -->
+        <button>Enviar</button>
+    </form>
+</body>
+</html>
