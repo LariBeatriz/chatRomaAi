@@ -5,6 +5,8 @@ const path = require('path');
 const axios = require('axios');  // Adicionando axios para requisições HTTP
 require('dotenv').config();  // Carrega as variáveis do arquivo .env
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -12,7 +14,11 @@ const io = socketIo(server);
 
 
 // Serve os arquivos estáticos (como chat.html, login.html e socket.io.js)
-app.use(express.static(path.join(__dirname)));
+app.use('/login', express.static(path.resolve(__dirname, '../login')));
+app.use('/tela-chat', express.static(path.resolve(__dirname, '../tela-chat')));
+
+
+
 
 // Lista para manter os usuários online
 let onlineUsers = {};
