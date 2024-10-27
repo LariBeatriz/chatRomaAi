@@ -1,56 +1,68 @@
-    // IMPORTAÇÕES E INSTÂNCIAS
-const express = require('express'); // Framework para criar o servidor
-const http = require('http'); // Criar um servidor que possa ser usado com o Socket.io
-const socketIo = require('socket.io'); // Comunicação em tempo real
-const path = require('path'); // Manipulação de caminhos de diretórios e arquivos
-const axios = require('axios'); // Requisições HTTP (Acessar a API da OpenAI)
-require('dotenv').config(); // Carrega as variáveis de ambiente
+// IMPORTAÇÕES E INSTÂNCIAS
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const path = require('path');
+const axios = require('axios');
+require('dotenv').config();
 
-const { OpenAI } = require('openai'); // Importação da biblioteca da OpenAI
-const openai = new OpenAI(); // Instância da classe OpenAI (p/ chamadas à API)
+const { OpenAI } = require('openai');
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
-const app = express(); // Instância Express que gerencia o aplicativo web
-const server = http.createServer(app); // Criação de um servidor HTTP com o Express
-const io = socketIo(server); // -> Isso permite a comunicação em tempo real 
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-app.use(express.static(path.join(__dirname, '..'))); // Servir arquivos estáticos (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, '..')));
 
-let onlineUsers = {}; // Armazena os usuários conectados
-const openaiApiKey = process.env.OPENAI_API_KEY; // Obtém a chave da API
+let onlineUsers = {};
+const openaiApiKey = process.env.OPENAI_API_KEY;
+const catApiKey = process.env.CAT_API_KEY;
 
 console.log("API Key da OpenAI:", openaiApiKey);
+console.log("API Key da TheCatAPI:", catApiKey);
+
+// Função para obter imagem de gato (API TheCatAPI)
+async function getCatImage() {
+    try {
+        const response = await axios.get('https://api.thecatapi.com/v1/images/search', {
+            headers: { 'x-api-key': catApiKey }
+        });
+        return response.data[0].url;
+    } catch (error) {
+        console.error("Erro ao obter imagem de gato:", error);
+        return null;
+    }
+}
 
 // Gerenciamento da conexão de novos usuários
 io.on('connection', (socket) => {
     console.log('Um usuário se conectou');
 
-    // Evento: um novo usuário se conecta e informa seu nome de usuário
     socket.on('userConnected', (username) => {
-        onlineUsers[socket.id] = username; // ID da conexão (recebe) Nome de usuário
-        io.emit('onlineUsers', Object.values(onlineUsers)); // Atualiza lista de usuários online
+        onlineUsers[socket.id] = username;
+        io.emit('onlineUsers', Object.values(onlineUsers));
         console.log(`${username} se conectou. Usuários online:`, onlineUsers);
     });
 
-    // Evento: mensagens de chat, ccomandos para texto e imagem da OpenAI
+    // Evento de mensagens de chat com comandos para texto, imagem e gatos
     socket.on('chat message', async (msgData) => {
-        if (msgData.message.startsWith('/text ')) {
-            const userMessage = msgData.message.slice(6); // Remove '/text ' do início da mensagem -> DAR UMA OLHADA
+        if (msgData.message.startsWith('/texto ')) {
+            const userMessage = msgData.message.slice(7);  // Ajuste para '/texto '
             io.emit('chat message', { sender: msgData.sender, message: msgData.message });
 
             try {
-                // Faz uma requisição ao endpoint '/openai/chat' para resposta de IA
                 const response = await axios.post('http://localhost:3000/openai/chat', { message: userMessage });
                 const aiResponse = response.data.response;
                 io.emit('chat message', { sender: 'AI Assistant', message: aiResponse });
             } catch (error) {
-                console.error("Erro ao processar comando /text:", error);
-                io.emit('chat message', { sender: 'Sistema', message: 'Erro ao processar o comando /text' });
+                console.error("Erro ao processar comando /texto:", error);
+                io.emit('chat message', { sender: 'Sistema', message: 'Erro ao processar o comando /texto' });
             }
         } else if (msgData.message.startsWith('/imagem ')) {
-            const prompt = msgData.message.slice(8); // Remove '/imagem ' do início da mensagem -> DAR UMA OLHADA
+            const prompt = msgData.message.slice(8);
             io.emit('chat message', { sender: msgData.sender, message: msgData.message });
 
-            // Geração de imagem
             try {
                 const response = await openai.images.generate({
                     model: "dall-e-3",
@@ -64,12 +76,18 @@ io.on('connection', (socket) => {
                 console.error("Erro ao gerar imagem:", error);
                 io.emit('chat message', { sender: 'Sistema', message: 'Erro ao gerar a imagem' });
             }
+        } else if (msgData.message.startsWith('/cat')) {
+            const catImageUrl = await getCatImage();
+            if (catImageUrl) {
+                io.emit('chat message', { sender: 'AI Assistant', message: `<img src="${catImageUrl}" alt="cat image" />` });
+            } else {
+                io.emit('chat message', { sender: 'Sistema', message: 'Erro ao obter a imagem de gato' });
+            }
         } else {
             io.emit('chat message', msgData);
         }
     });
 
-    // Evento: desconexão do usuário
     socket.on('disconnect', () => {
         const disconnectedUser = onlineUsers[socket.id];
         delete onlineUsers[socket.id];
@@ -78,7 +96,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Endpoint para testar conexão com a OpenAI com uma mensagem de teste
+// Endpoint de teste da OpenAI
 app.get('/openai-test', (req, res) => {
     const headers = {
         'Authorization': `Bearer ${openaiApiKey}`,
@@ -99,7 +117,7 @@ app.get('/openai-test', (req, res) => {
     });
 });
 
-// Endpoint para o chat que envia uma mensagem para a OpenAI e retorna a resposta
+// Endpoint para o chat da OpenAI
 app.post('/openai/chat', express.json(), async (req, res) => {
     const { message } = req.body;
 
@@ -115,23 +133,22 @@ app.post('/openai/chat', express.json(), async (req, res) => {
             }
         });
 
-        console.log("Resposta da API OpenAI:", response.data);
         const aiResponse = response.data.choices[0].message.content.trim();
         res.json({ response: aiResponse });
     } catch (error) {
-        console.error("Erro ao fazer a requisição para a OpenAI:", error.response ? error.response.data : error.message);
+        console.error("Erro ao se comunicar com a OpenAI:", error);
         res.status(500).json({ error: 'Erro ao se comunicar com a API da OpenAI' });
     }
 });
 
-// Inicia o servidor e abre a página de login automaticamente
+// Função assíncrona para iniciar o servidor
 server.listen(3000, async () => {
     console.log('Servidor rodando na porta 3000');
     const open = (await import('open')).default;
     await open('http://localhost:3000/login');
 });
 
-// Rota para carregar a página de login
+// Rota para página de login
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'login', 'index.html'));
 });
