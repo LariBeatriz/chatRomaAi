@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
                 console.error("Erro ao gerar imagem:", error);
                 io.emit('chat message', { sender: 'Sistema', message: 'Erro ao gerar a imagem' });
             }
-        } else if (msgData.message.startsWith('/cat')) {
+        } else if (msgData.message.startsWith('/gato')) {
             const catImageUrl = await getCatImage();
             if (catImageUrl) {
                 io.emit('chat message', { sender: 'AI Assistant', message: `<img src="${catImageUrl}" alt="cat image" />` });
@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
             }
 
         
-        } else if (msgData.message.startsWith('/dog')) {
+        } else if (msgData.message.startsWith('/cachorro')) {
             try {
                 // Requisição para obter uma imagem aleatória de cachorro
                 const response = await axios.get('https://dog.ceo/api/breeds/image/random');
