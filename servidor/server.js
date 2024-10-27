@@ -83,7 +83,21 @@ io.on('connection', (socket) => {
             } else {
                 io.emit('chat message', { sender: 'Sistema', message: 'Erro ao obter a imagem de gato' });
             }
-        } else {
+
+        
+        } else if (msgData.message.startsWith('/dog')) {
+            try {
+                // Requisição para obter uma imagem aleatória de cachorro
+                const response = await axios.get('https://dog.ceo/api/breeds/image/random');
+                const dogImage = response.data.message; // Recebe a imagem da resposta da API
+
+                // Envia a imagem de cachorro para todos os usuários no chat
+                io.emit('chat message', { sender: 'Dog Bot', message: `<img src="${dogImage}" alt="Dog" />` });
+            } catch (error) {
+                console.error("Erro ao buscar imagem de cachorro:", error.response ? error.response.data : error.message);
+                io.emit('chat message', { sender: 'Sistema', message: 'Erro ao buscar imagem de cachorro.' });
+            }
+        }else {
             io.emit('chat message', msgData);
         }
     });
