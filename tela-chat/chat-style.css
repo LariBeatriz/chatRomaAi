@@ -14,7 +14,6 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-
 .sidebar {
   width: 200px;
   padding: 20px;
@@ -37,7 +36,6 @@ body {
   margin-bottom: 5px;
   border-radius: 5px;
 }
-
 
 .main-chat {
   flex-grow: 1;
@@ -115,7 +113,7 @@ li {
 
 .received {
   text-align: left;
-  background-color: #f8d7da;
+  background-color: #fafab1;
   margin-left: 0;
   margin-right: auto;
   padding: 10px;
@@ -134,4 +132,11 @@ li span {
   display: block;
   font-size: 12px;
   color: gray;
+}
+
+/* Estilo para imagens dentro do chat */
+li img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
 }

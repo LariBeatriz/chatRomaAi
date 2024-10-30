@@ -8,34 +8,26 @@
 </head>
 
 <body>
-    <!-- Contêiner principal que envolve todo o conteúdo da página -->
+    <!-- Container principal, engloba todo o conteúdo da página -->
     <div class="container">
-        <!-- Caixa para usuários que já possuem uma conta -->
-        <div class="box signin">
+        <div class="box signin"> <!-- Caixa de login para usuários que já possuem conta -->
             <h2>Já possui uma conta?</h2>
-            <!-- Botão que ativa o formulário de login -->
             <button class="signinBtn">Entrar</button>
         </div>
-        <!-- Caixa para usuários que ainda não possuem uma conta -->
-        <div class="box signup">
+        <div class="box signup"> <!-- Caixa de registro para novos usuários -->
             <h2>Não possui uma conta?</h2>
-            <!-- Botão que ativa o formulário de registro -->
             <button class="signupBtn">Registrar-se</button>
         </div>
 
-        <!-- Caixa de formulários (de login e registro) -->
+        <!-- Caixa de formulários (login e registro) -->
         <div class="formBx">
             <!-- Formulário de login -->
             <div class="form signinform">
                 <form id="loginForm">
                     <h3>Entrar</h3>
-                    <!-- Campo de texto para inserir o nome de usuário -->
                     <input type="text" placeholder="Usuário" id="loginUsername" required/>
-                    <!-- Campo de senha -->
                     <input type="password" placeholder="Senha" id="loginPassword" required/>
-                    <!-- Botão de submissão do formulário de login -->
                     <input type="submit" value="Login"/>
-                    <!-- Link para recuperação de senha -->
                     <a href="#" class="forgot">Esqueci a senha</a>
                 </form>
             </div>
@@ -44,78 +36,72 @@
             <div class="form signupform">
                 <form id="signupForm">
                     <h3>Registrar-se</h3>
-                    <!-- Campo de texto para o nome de usuário -->
                     <input type="text" placeholder="Usuário" id="signupUsername" required/>
-                    <!-- Campo de e-mail -->
                     <input type="email" placeholder="Endereço de Email" id="signupEmail" required/>
-                    <!-- Campo de senha -->
                     <input type="password" placeholder="Senha" id="signupPassword" required/>
-                    <!-- Campo para confirmar a senha -->
                     <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirm" required/>
-                    <!-- Botão de submissão do formulário -->
                     <input type="submit" value="Registrar"/>
                 </form>
             </div>
         </div>
     </div>
 
+                    <!--JAVASCRIPT-->
     <script>
-        // Seleciona os botões e o corpo da página para manipulação de eventos
+        // Declarações de variáveis que retornam o 1º elemento que corresponder ao seletor (2 classes | 1 tag)
         let signinBtn = document.querySelector('.signinBtn');
         let signupBtn = document.querySelector('.signupBtn');
         let body = document.querySelector('body');
 
-        // Função ativada ao clicar no botão de registro, adicionando a classe 'slide' ao corpo
+        // Alterna para o formulário de registro (adiciona o slide)
         signupBtn.onclick = function () {
             body.classList.add('slide');
         }
 
-        // Função ativada ao clicar no botão de login, removendo a classe 'slide' do corpo
+        // Alterna para o formilário de login (remove o slide)
         signinBtn.onclick = function () {
             body.classList.remove('slide');
         }
 
-        // Função de registro de novo usuário
+        // Registro de usuários
         document.getElementById('signupForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Coleta os dados dos campos do formulário
+            // Captura os valores do formulário de registro
             const username = document.getElementById('signupUsername').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
 
-            // Verifica se a senha e a confirmação de senha são iguais
+            // Validação de senha
             if (password !== passwordConfirm) {
                 alert("As senhas não coincidem!");
                 return;
             }
 
-            // Armazena o nome de usuário e a senha no localStorage do navegador
+            // Armazena o usuário e senha no localStorage
             localStorage.setItem('username', username);
-            localStorage.setItem('password', password); // Adicionando o armazenamento da senha
+            localStorage.setItem('password', password);
 
-            // Exibe uma mensagem de sucesso e redireciona para a página de chat
+            // Alerta de sucesso e redirecionamento para o chat
             alert("Usuário registrado com sucesso!");
             window.location.href = `/tela-chat/chat-socketio.html?username=${encodeURIComponent(username)}`;
         });
 
-        // Função de login
+        // Login do usuário
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Coleta os dados dos campos de login
+            // Captura os valores do formulário de login
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
-
-            // Simulação de verificação de usuário armazenado no localStorage
-            const storedUsername = localStorage.getItem('username'); // Obtém o nome de usuário armazenado
-            const storedPassword = localStorage.getItem('password'); // Obtém a senha armazenada
-
-            // Verifica se o nome de usuário e a senha conferem
+            // Recuperação dos dados do usuário salvos no localStorage
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+            
+            // Validação de login (dados inseridos x dados armazenados -> comparação)
             if (username === storedUsername && password === storedPassword) {
                 alert("Login bem-sucedido!");
-                // Redireciona para a página de chat
                 window.location.href = `/tela-chat/chat-socketio.html?username=${encodeURIComponent(username)}`;
             } else {
                 alert("Usuário ou senha incorretos.");
