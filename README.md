@@ -9,7 +9,7 @@ A aplicação possui a tela de login, cadastro de usuários e um chat.
 * Busca automática por texto, imagens e sons: Integração com a API OpenAI, o qual é possivel fazer pesquisar de imagens e sons de comandos atribuidos ao chat. Além da conversação com IA pelo chat.
 
 ## Instalação
-Execute npm run start para instalar e iniciar o servidor de desenvolvimento. Acessando http://localhost:3000/.
+Execute  para instalar e iniciar o servidor de desenvolvimento. Acessando http://localhost:3000/.
 O aplicativo será carregado automaticamente levando a aplicação.
 
 ## Comandos de Servidor
