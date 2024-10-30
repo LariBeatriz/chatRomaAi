@@ -8,9 +8,7 @@ socket.emit('userConnected', username);
 
 // Exibir mensagens recebidas no lado esquerdo ou direito com o nome e a hora
 socket.on("chat message", (msgData) => {
-    if (msgData.sender !== username) { // Apenas exibe a mensagem se não for do usuário atual
-        exibirMensagem(msgData);
-    }
+    exibirMensagem(msgData);
 });
 
 // Atualiza a lista de usuários online
@@ -26,14 +24,25 @@ socket.on("onlineUsers", (users) => {
     });
 });
 
+// Adicionar evento para receber histórico de mensagens
+socket.on('messageHistory', (history) => {
+    // Limpar mensagens existentes
+    const ul = document.querySelector('#messages');
+    ul.innerHTML = '';
+    
+    // Exibir cada mensagem do histórico
+    history.forEach(msgData => {
+        exibirMensagem(msgData);
+    });
+});
+
 // Enviar mensagens
 function enviar() {
     const input = document.querySelector('#msgInput');
     const msg = input.value;
 
     if (msg.trim() !== "") { // Verifica se a mensagem não está vazia
-        exibirMensagem({ sender: username, message: msg }); // Exibe a mensagem localmente antes de enviar
-        // Envia a mensagem ao servidor com o nome do usuário
+        // Envia a mensagem para o servidor
         socket.emit("chat message", { sender: username, message: msg });
         input.value = ""; // Limpa o campo de entrada
     }
@@ -52,17 +61,11 @@ function exibirMensagem(msgData) {
         li.classList.add('received'); // Classe para mensagens recebidas de outros usuários
     }
 
-    // Verifica se a mensagem é uma imagem
-    if (msgData.type === 'image') {
-        const image = document.createElement('img');
-        image.src = msgData.message;
-        image.alt = 'Imagem gerada pela AI';
-        image.style.maxWidth = '300px';
-        image.style.borderRadius = '8px';
-        li.appendChild(image);
+    // Verifica se a mensagem contém HTML (como no caso do card do Rick and Morty)
+    if (msgData.message.includes('<div') || msgData.message.includes('<img')) {
+        li.innerHTML = `<strong>${msgData.sender}</strong><br>${msgData.message}<span>${time}</span>`;
     } else {
-        // Caso a mensagem seja texto, exibe-a normalmente
-        li.innerHTML = `<strong>${msgData.sender}</strong><br>${msgData.message} <span>${time}</span>`;
+        li.innerHTML = `<strong>${msgData.sender}</strong><br>${msgData.message}<span>${time}</span>`;
     }
 
     ul.appendChild(li);
