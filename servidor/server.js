@@ -37,6 +37,15 @@ async function getCatImage() {
         return null;
     }
 }
+async function getFoxImage() {
+    try {
+        const response = await axios.get('https://randomfox.ca/floof/');
+        return response.data.image; // Certifique-se de que `response.data.image` está correto
+    } catch (error) {
+        console.error("Erro ao obter imagem de raposa:", error);
+        return null;
+    }
+}
 
 function traduzirStatus(status) {
     switch (status.toLowerCase()) {
@@ -106,7 +115,10 @@ io.on('connection', (socket) => {
     socket.on('userConnected', (username) => {
         onlineUsers[socket.id] = username;
         io.emit('onlineUsers', Object.values(onlineUsers));
-        
+
+        // Emitir som de entrada para todos os usuários
+        //io.emit('playSound', { sound: '../audio/entrada.coin.mp3' });
+
         socket.emit('messageHistory', messageHistory);
         
         console.log(`${username} se conectou. Usuários online:`, onlineUsers);
@@ -117,6 +129,9 @@ io.on('connection', (socket) => {
             messageHistory.shift();
         }
         messageHistory.push(msgData);
+
+        // Emite o som de mensagem enviada para todos
+        io.emit('playSound', { sound: '../audio/mensagem.mp3' });
 
         if (msgData.message.startsWith('/texto ')) {
             const userMessage = msgData.message.slice(7);
@@ -180,7 +195,8 @@ io.on('connection', (socket) => {
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                             margin: 10px 0;
                         "/>
-                    </div>` 
+                    </div>`,
+                    audioPath: '../audio/gato.mp3' // Caminho do áudio do gato
                 });
             } else {
                 io.emit('chat message', { 
@@ -201,7 +217,8 @@ io.on('connection', (socket) => {
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                             margin: 10px 0;
                         "/>
-                    </div>` 
+                    </div>`,
+                    audioPath: '../audio/cachorro.mp3' // Caminho do áudio do cachorro
                 });
             } catch (error) {
                 console.error("Erro ao buscar imagem de cachorro:", error);
@@ -210,7 +227,31 @@ io.on('connection', (socket) => {
                     message: '❌ Erro ao buscar imagem de cachorro.' 
                 });
             }
-        } else if (msgData.message.startsWith('/rick ')) {
+        } else if (msgData.message.startsWith('/raposa')) {
+            const foxImageUrl = await getFoxImage();
+            if (foxImageUrl) {
+                io.emit('chat message', { 
+                    sender: '🦊 Fox Bot', 
+                    message: `<div style="text-align: center;">
+                        <img src="${foxImageUrl}" alt="Fox image" style="
+                            max-width: 300px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            margin: 10px 0;
+                        "/>
+                    </div>`,
+                    audioPath: '../audio/raposa.mp3' // Caminho do áudio da raposa
+                });
+            } else {
+                io.emit('chat message', { 
+                    sender: 'Sistema', 
+                    message: '❌ Erro ao obter a imagem de raposa.' 
+                });
+
+            }
+
+        }
+         else if (msgData.message.startsWith('/rick ')) {
             const characterName = msgData.message.slice(6).trim();
             io.emit('chat message', { sender: msgData.sender, message: msgData.message });
 
@@ -250,12 +291,13 @@ io.on('connection', (socket) => {
                                     <span style="font-weight: bold;">Localização:</span> ${character.location}
                                 </p>
                             </div>
-                        </div>
-                    `;
-                    io.emit('chat message', { 
-                        sender: 'Rick and Morty Bot', 
-                        message: characterInfo 
-                    });
+                        </div>`
+                        
+                        io.emit('chat message', { 
+                            sender: 'Rick and Morty Bot', 
+                            message: characterInfo,
+                            audioPath: '../audio/rick.mp3' // Caminho da API rick
+                        });
                 } else {
                     io.emit('chat message', { 
                         sender: 'Rick and Morty Bot', 
@@ -278,6 +320,10 @@ io.on('connection', (socket) => {
         const disconnectedUser = onlineUsers[socket.id];
         delete onlineUsers[socket.id];
         io.emit('onlineUsers', Object.values(onlineUsers));
+        
+        // Emite o som de saída para todos
+        io.emit('playSound', { sound: '../audio/saida.mp3' });
+
         console.log(`${disconnectedUser} se desconectou. Usuários online:`, onlineUsers);
     });
 });
