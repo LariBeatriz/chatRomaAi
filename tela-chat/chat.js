@@ -6,16 +6,16 @@ const username = localStorage.getItem('username') || 'Usuário Anônimo';
 // Notifica o servidor que o usuário se conectou
 socket.emit('userConnected', username);
 
-// Toca o som de entrada ao conectar
-document.getElementById("enterSound").play();
-
 // Exibir mensagens recebidas no lado esquerdo ou direito com o nome e a hora
 socket.on("chat message", (msgData) => {
-    // Toca o som de mensagem recebida apenas se a mensagem for de outro usuário
-    if (msgData.sender !== username) {
-        document.getElementById("messageReceivedSound").play();
-    }
     exibirMensagem(msgData);
+    // Reproduzir som se a mensagem tiver um caminho de áudio
+    if (msgData.audioPath) {
+        const audio = new Audio(msgData.audioPath);
+        audio.play().catch(error => {
+            console.error("Erro ao reproduzir o som:", error);
+        });
+    }
 });
 
 // Atualiza a lista de usuários online
@@ -40,6 +40,13 @@ socket.on('messageHistory', (history) => {
     // Exibir cada mensagem do histórico
     history.forEach(msgData => {
         exibirMensagem(msgData);
+        // Reproduzir som se a mensagem tiver um caminho de áudio
+        if (msgData.audioPath) {
+            const audio = new Audio(msgData.audioPath);
+            audio.play().catch(error => {
+                console.error("Erro ao reproduzir o som:", error);
+            });
+        }
     });
 });
 
@@ -50,10 +57,8 @@ function enviar() {
 
     if (msg.trim() !== "") { // Verifica se a mensagem não está vazia
         // Envia a mensagem para o servidor
-        socket.emit("chat message", { sender: username, message: msg });
-        
-        // Toca o som de mensagem enviada
-        document.getElementById("messageSentSound").play();
+        const audioPath = '../audio/mensagem.mp3';
+        socket.emit("chat message", { sender: username, message: msg, audioPath: audioPath });
         
         input.value = ""; // Limpa o campo de entrada
     }
@@ -97,3 +102,4 @@ document.getElementById('msgInput').addEventListener('keypress', function(event)
 window.addEventListener("beforeunload", function () {
     document.getElementById("exitSound").play();
 });
+

@@ -116,11 +116,13 @@ io.on('connection', (socket) => {
         onlineUsers[socket.id] = username;
         io.emit('onlineUsers', Object.values(onlineUsers));
 
-        // Emitir som de entrada para todos os usuários
-        //io.emit('playSound', { sound: '../audio/entrada.coin.mp3' });
-
         socket.emit('messageHistory', messageHistory);
-        
+        const audioPath = '../audio/hello.mp3';
+        socket.emit('chat message', { 
+            sender: 'Sistema', 
+            message: `${username} entrou no chat.`,
+            audioPath: audioPath 
+        });
         console.log(`${username} se conectou. Usuários online:`, onlineUsers);
     });
 
@@ -129,9 +131,6 @@ io.on('connection', (socket) => {
             messageHistory.shift();
         }
         messageHistory.push(msgData);
-
-        // Emite o som de mensagem enviada para todos
-        io.emit('playSound', { sound: '../audio/mensagem.mp3' });
 
         if (msgData.message.startsWith('/texto ')) {
             const userMessage = msgData.message.slice(7);
@@ -157,7 +156,7 @@ io.on('connection', (socket) => {
                         color: #2c3e50;
                         font-family: Arial, sans-serif;
                         line-height: 1.5;
-                    ">${aiResponse}</div>` 
+                    ">${aiResponse}</div>`, audioPath: '../audio/texto.mp3' // Caminho do áudio do gato
                 });
             } catch (error) {
                 console.error("Erro ao processar comando /texto:", error);
@@ -176,9 +175,10 @@ io.on('connection', (socket) => {
                     prompt: prompt,
                     n: 1,
                     size: "1024x1024",
+                    
                 });
                 const imageUrl = response.data[0].url;
-                io.emit('chat message', { sender: 'AI Assistant', message: `<img src="${imageUrl}" alt="generated image" />` });
+                io.emit('chat message', { sender: 'AI Assistant', message: `<img src="${imageUrl}" alt="generated image" />`,audioPath: '../audio/imagem.mp3'});
             } catch (error) {
                 console.error("Erro ao gerar imagem:", error);
                 io.emit('chat message', { sender: 'Sistema', message: 'Erro ao gerar a imagem' });
