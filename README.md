@@ -28,3 +28,18 @@ Esse projeto segue as boas práticas de versionamento no Git, com as seguintes b
 
 O projeto está sendo hospedado no Codespace com deploys automáticos configurados a partir da integração com o GitHub.
 Para visualizar o projeto online, acesse o link disponível no reposiótrio.
+
+
+## Funcionalidades
+* /Cachorro (Imagens e som de cachorro)
+* /Gato (Imagens e Som de Gato)
+* /Raposa (Imagens e Som de Raposa)
+* /Rick + "algum personagem de rick and morty" (Fatos engraçados e Som do Rick and Morty)
+* /Imagem - Geração automatica de imagem da Open AI
+* /Texto - Chatbot integrando da open ai
+
+
+## Melhorias a serem implementadas
+* Loading State para a geração de imagens
+* Melhoria no design do Chat bem como responsividade
+* Sons do sistema não estão funcionando
