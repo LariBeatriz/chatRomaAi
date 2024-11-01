@@ -1,56 +1,175 @@
-    // IMPORTAÇÕES E INSTÂNCIAS
-const express = require('express'); // Framework para criar o servidor
-const http = require('http'); // Criar um servidor que possa ser usado com o Socket.io
-const socketIo = require('socket.io'); // Comunicação em tempo real
-const path = require('path'); // Manipulação de caminhos de diretórios e arquivos
-const axios = require('axios'); // Requisições HTTP (Acessar a API da OpenAI)
-require('dotenv').config(); // Carrega as variáveis de ambiente
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const path = require('path');
+const axios = require('axios');
+require('dotenv').config();
 
-const { OpenAI } = require('openai'); // Importação da biblioteca da OpenAI
-const openai = new OpenAI(); // Instância da classe OpenAI (p/ chamadas à API)
+const { OpenAI } = require('openai');
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
-const app = express(); // Instância Express que gerencia o aplicativo web
-const server = http.createServer(app); // Criação de um servidor HTTP com o Express
-const io = socketIo(server); // -> Isso permite a comunicação em tempo real 
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-app.use(express.static(path.join(__dirname, '..'))); // Servir arquivos estáticos (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, '..')));
 
-let onlineUsers = {}; // Armazena os usuários conectados
-const openaiApiKey = process.env.OPENAI_API_KEY; // Obtém a chave da API
+let onlineUsers = {};
+const openaiApiKey = process.env.OPENAI_API_KEY;
+const catApiKey = process.env.CAT_API_KEY;
 
 console.log("API Key da OpenAI:", openaiApiKey);
+console.log("API Key da TheCatAPI:", catApiKey);
 
-// Gerenciamento da conexão de novos usuários
+let messageHistory = [];
+const MAX_HISTORY = 50;
+
+async function getCatImage() {
+    try {
+        const response = await axios.get('https://api.thecatapi.com/v1/images/search', {
+            headers: { 'x-api-key': catApiKey }
+        });
+        return response.data[0].url;
+    } catch (error) {
+        console.error("Erro ao obter imagem de gato:", error);
+        return null;
+    }
+}
+async function getFoxImage() {
+    try {
+        const response = await axios.get('https://randomfox.ca/floof/');
+        return response.data.image; // Certifique-se de que `response.data.image` está correto
+    } catch (error) {
+        console.error("Erro ao obter imagem de raposa:", error);
+        return null;
+    }
+}
+
+function traduzirStatus(status) {
+    switch (status.toLowerCase()) {
+        case 'alive': return 'Vivo';
+        case 'dead': return 'Morto';
+        case 'unknown': return 'Desconhecido';
+        default: return status;
+    }
+}
+
+// Função para traduzir o gênero do personagem
+function traduzirGenero(gender) {
+    switch (gender.toLowerCase()) {
+        case 'male': return 'Masculino';
+        case 'female': return 'Feminino';
+        case 'genderless': return 'Sem Gênero';
+        case 'unknown': return 'Desconhecido';
+        default: return gender;
+    }
+}
+
+// Função para traduzir a espécie do personagem
+function traduzirEspecie(species) {
+    switch (species.toLowerCase()) {
+        case 'human': return 'Humano';
+        case 'alien': return 'Alienígena';
+        case 'humanoid': return 'Humanóide';
+        case 'robot': return 'Robô';
+        case 'animal': return 'Animal';
+        case 'disease': return 'Doença';
+        case 'parasite': return 'Parasita';
+        case 'unknown': return 'Desconhecido';
+        default: return species;
+    }
+}
+
+async function getRickAndMortyCharacter(query) {
+    try {
+        let url = 'https://rickandmortyapi.com/api/character';
+        if (query) {
+            url += `/?name=${encodeURIComponent(query)}`;
+        }
+        const response = await axios.get(url);
+        const character = response.data.results[0];
+        
+        if (character) {
+            return {
+                name: character.name,
+                status: traduzirStatus(character.status),
+                species: traduzirEspecie(character.species),
+                gender: traduzirGenero(character.gender),
+                origin: character.origin.name === 'unknown' ? 'Desconhecida' : character.origin.name,
+                location: character.location.name === 'unknown' ? 'Desconhecida' : character.location.name,
+                image: character.image
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error("Erro ao buscar personagem:", error);
+        return null;
+    }
+}
+
 io.on('connection', (socket) => {
     console.log('Um usuário se conectou');
 
-    // Evento: um novo usuário se conecta e informa seu nome de usuário
     socket.on('userConnected', (username) => {
-        onlineUsers[socket.id] = username; // ID da conexão (recebe) Nome de usuário
-        io.emit('onlineUsers', Object.values(onlineUsers)); // Atualiza lista de usuários online
+        onlineUsers[socket.id] = username;
+        io.emit('onlineUsers', Object.values(onlineUsers));
+
+        // Emitir som de entrada para todos os usuários
+        //io.emit('playSound', { sound: '../audio/entrada.coin.mp3' });
+
+        socket.emit('messageHistory', messageHistory);
+        
         console.log(`${username} se conectou. Usuários online:`, onlineUsers);
     });
 
-    // Evento: mensagens de chat, ccomandos para texto e imagem da OpenAI
     socket.on('chat message', async (msgData) => {
-        if (msgData.message.startsWith('/text ')) {
-            const userMessage = msgData.message.slice(6); // Remove '/text ' do início da mensagem -> DAR UMA OLHADA
+        if (messageHistory.length >= MAX_HISTORY) {
+            messageHistory.shift();
+        }
+        messageHistory.push(msgData);
+
+        // Emite o som de mensagem enviada para todos
+        io.emit('playSound', { sound: '../audio/mensagem.mp3' });
+
+        if (msgData.message.startsWith('/texto ')) {
+            const userMessage = msgData.message.slice(7);
             io.emit('chat message', { sender: msgData.sender, message: msgData.message });
 
             try {
-                // Faz uma requisição ao endpoint '/openai/chat' para resposta de IA
-                const response = await axios.post('http://localhost:3000/openai/chat', { message: userMessage });
-                const aiResponse = response.data.response;
-                io.emit('chat message', { sender: 'AI Assistant', message: aiResponse });
+                const completion = await openai.chat.completions.create({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "user", content: userMessage }],
+                    max_tokens: 150,
+                    temperature: 0.7
+                });
+
+                const aiResponse = completion.choices[0].message.content.trim();
+                io.emit('chat message', { 
+                    sender: '🤖 AI Assistant', 
+                    message: `<div style="
+                        background-color: #f8f9fa;
+                        border: 2px solid #dee2e6;
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin: 10px 0;
+                        color: #2c3e50;
+                        font-family: Arial, sans-serif;
+                        line-height: 1.5;
+                    ">${aiResponse}</div>` 
+                });
             } catch (error) {
-                console.error("Erro ao processar comando /text:", error);
-                io.emit('chat message', { sender: 'Sistema', message: 'Erro ao processar o comando /text' });
+                console.error("Erro ao processar comando /texto:", error);
+                io.emit('chat message', { 
+                    sender: 'Sistema', 
+                    message: '❌ Erro ao processar o comando /texto' 
+                });
             }
         } else if (msgData.message.startsWith('/imagem ')) {
-            const prompt = msgData.message.slice(8); // Remove '/imagem ' do início da mensagem -> DAR UMA OLHADA
+            const prompt = msgData.message.slice(8);
             io.emit('chat message', { sender: msgData.sender, message: msgData.message });
 
-            // Geração de imagem
             try {
                 const response = await openai.images.generate({
                     model: "dall-e-3",
@@ -64,21 +183,151 @@ io.on('connection', (socket) => {
                 console.error("Erro ao gerar imagem:", error);
                 io.emit('chat message', { sender: 'Sistema', message: 'Erro ao gerar a imagem' });
             }
+        } else if (msgData.message.startsWith('/gato')) {
+            const catImageUrl = await getCatImage();
+            if (catImageUrl) {
+                io.emit('chat message', { 
+                    sender: '😺 Cat Bot', 
+                    message: `<div style="text-align: center;">
+                        <img src="${catImageUrl}" alt="cat image" style="
+                            max-width: 300px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            margin: 10px 0;
+                        "/>
+                    </div>`,
+                    audioPath: '../audio/gato.mp3' // Caminho do áudio do gato
+                });
+            } else {
+                io.emit('chat message', { 
+                    sender: 'Sistema', 
+                    message: '❌ Erro ao obter a imagem de gato' 
+                });
+            }
+        } else if (msgData.message.startsWith('/cachorro')) {
+            try {
+                const response = await axios.get('https://dog.ceo/api/breeds/image/random');
+                const dogImage = response.data.message;
+                io.emit('chat message', { 
+                    sender: '🐕 Dog Bot', 
+                    message: `<div style="text-align: center;">
+                        <img src="${dogImage}" alt="Dog" style="
+                            max-width: 300px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            margin: 10px 0;
+                        "/>
+                    </div>`,
+                    audioPath: '../audio/cachorro.mp3' // Caminho do áudio do cachorro
+                });
+            } catch (error) {
+                console.error("Erro ao buscar imagem de cachorro:", error);
+                io.emit('chat message', { 
+                    sender: 'Sistema', 
+                    message: '❌ Erro ao buscar imagem de cachorro.' 
+                });
+            }
+        } else if (msgData.message.startsWith('/raposa')) {
+            const foxImageUrl = await getFoxImage();
+            if (foxImageUrl) {
+                io.emit('chat message', { 
+                    sender: '🦊 Fox Bot', 
+                    message: `<div style="text-align: center;">
+                        <img src="${foxImageUrl}" alt="Fox image" style="
+                            max-width: 300px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            margin: 10px 0;
+                        "/>
+                    </div>`,
+                    audioPath: '../audio/raposa.mp3' // Caminho do áudio da raposa
+                });
+            } else {
+                io.emit('chat message', { 
+                    sender: 'Sistema', 
+                    message: '❌ Erro ao obter a imagem de raposa.' 
+                });
+
+            }
+
+        }
+         else if (msgData.message.startsWith('/rick ')) {
+            const characterName = msgData.message.slice(6).trim();
+            io.emit('chat message', { sender: msgData.sender, message: msgData.message });
+
+            try {
+                const character = await getRickAndMortyCharacter(characterName);
+                if (character) {
+                    const characterInfo = `
+                        <div style="
+                            background-color: #f8f9fa;
+                            border: 2px solid #dee2e6;
+                            padding: 15px;
+                            border-radius: 10px;
+                            margin: 10px 0;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        ">
+                            <div style="text-align: center; margin-bottom: 10px;">
+                                <img src="${character.image}" alt="${character.name}" 
+                                    style="width: 200px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                            </div>
+                            <div style="font-family: Arial, sans-serif;">
+                                <p style="font-size: 18px; font-weight: bold; margin: 5px 0; color: #2c3e50;">
+                                    ${character.name}
+                                </p>
+                                <p style="margin: 5px 0; color: #34495e;">
+                                    <span style="font-weight: bold;">Status:</span> ${character.status}
+                                </p>
+                                <p style="margin: 5px 0; color: #34495e;">
+                                    <span style="font-weight: bold;">Espécie:</span> ${character.species}
+                                </p>
+                                <p style="margin: 5px 0; color: #34495e;">
+                                    <span style="font-weight: bold;">Gênero:</span> ${character.gender}
+                                </p>
+                                <p style="margin: 5px 0; color: #34495e;">
+                                    <span style="font-weight: bold;">Origem:</span> ${character.origin}
+                                </p>
+                                <p style="margin: 5px 0; color: #34495e;">
+                                    <span style="font-weight: bold;">Localização:</span> ${character.location}
+                                </p>
+                            </div>
+                        </div>`
+                        
+                        io.emit('chat message', { 
+                            sender: 'Rick and Morty Bot', 
+                            message: characterInfo,
+                            audioPath: '../audio/rick.mp3' // Caminho da API rick
+                        });
+                } else {
+                    io.emit('chat message', { 
+                        sender: 'Rick and Morty Bot', 
+                        message: '❌ Personagem não encontrado. Tente outro nome!' 
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao processar comando /rick:", error);
+                io.emit('chat message', { 
+                    sender: 'Rick and Morty Bot', 
+                    message: '❌ Erro ao buscar informações do personagem. Tente novamente mais tarde.' 
+                });
+            }
         } else {
             io.emit('chat message', msgData);
         }
     });
 
-    // Evento: desconexão do usuário
     socket.on('disconnect', () => {
         const disconnectedUser = onlineUsers[socket.id];
         delete onlineUsers[socket.id];
         io.emit('onlineUsers', Object.values(onlineUsers));
+        
+        // Emite o som de saída para todos
+        io.emit('playSound', { sound: '../audio/saida.mp3' });
+
         console.log(`${disconnectedUser} se desconectou. Usuários online:`, onlineUsers);
     });
 });
 
-// Endpoint para testar conexão com a OpenAI com uma mensagem de teste
 app.get('/openai-test', (req, res) => {
     const headers = {
         'Authorization': `Bearer ${openaiApiKey}`,
@@ -99,39 +348,40 @@ app.get('/openai-test', (req, res) => {
     });
 });
 
-// Endpoint para o chat que envia uma mensagem para a OpenAI e retorna a resposta
 app.post('/openai/chat', express.json(), async (req, res) => {
     const { message } = req.body;
 
     try {
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+        const completion = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [{ role: "user", content: message }],
-            max_tokens: 150
-        }, {
-            headers: {
-                'Authorization': `Bearer ${openaiApiKey}`,
-                'Content-Type': 'application/json'
-            }
+            max_tokens: 150,
+            temperature: 0.7
         });
 
-        console.log("Resposta da API OpenAI:", response.data);
-        const aiResponse = response.data.choices[0].message.content.trim();
-        res.json({ response: aiResponse });
+        if (completion && completion.choices && completion.choices[0]) {
+            const aiResponse = completion.choices[0].message.content.trim();
+            res.json({ response: aiResponse });
+        } else {
+            throw new Error('Resposta inválida da API');
+        }
     } catch (error) {
-        console.error("Erro ao fazer a requisição para a OpenAI:", error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'Erro ao se comunicar com a API da OpenAI' });
+        console.error("Erro detalhado ao se comunicar com a OpenAI:", error);
+        res.status(500).json({ 
+            error: 'Erro ao se comunicar com a API da OpenAI',
+            details: error.message 
+        });
     }
 });
 
-// Inicia o servidor e abre a página de login automaticamente
 server.listen(3000, async () => {
     console.log('Servidor rodando na porta 3000');
     const open = (await import('open')).default;
     await open('http://localhost:3000/login');
 });
 
-// Rota para carregar a página de login
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'login', 'index.html'));
 });
+
+console.log('OpenAI API Key:', process.env.OPENAI_API_KEY ? 'Configurada' : 'Não configurada');
