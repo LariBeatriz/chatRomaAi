@@ -6,8 +6,15 @@ const username = localStorage.getItem('username') || 'Usuário Anônimo';
 // Notifica o servidor que o usuário se conectou
 socket.emit('userConnected', username);
 
+// Toca o som de entrada ao conectar
+document.getElementById("enterSound").play();
+
 // Exibir mensagens recebidas no lado esquerdo ou direito com o nome e a hora
 socket.on("chat message", (msgData) => {
+    // Toca o som de mensagem recebida apenas se a mensagem for de outro usuário
+    if (msgData.sender !== username) {
+        document.getElementById("messageReceivedSound").play();
+    }
     exibirMensagem(msgData);
 });
 
@@ -44,6 +51,10 @@ function enviar() {
     if (msg.trim() !== "") { // Verifica se a mensagem não está vazia
         // Envia a mensagem para o servidor
         socket.emit("chat message", { sender: username, message: msg });
+        
+        // Toca o som de mensagem enviada
+        document.getElementById("messageSentSound").play();
+        
         input.value = ""; // Limpa o campo de entrada
     }
 }
@@ -80,4 +91,9 @@ document.getElementById('msgInput').addEventListener('keypress', function(event)
     if (event.key === 'Enter') {
         enviar();
     }
+});
+
+// Toca o som de saída ao fechar ou recarregar a página
+window.addEventListener("beforeunload", function () {
+    document.getElementById("exitSound").play();
 });
