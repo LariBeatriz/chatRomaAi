@@ -42,4 +42,4 @@ Para visualizar o projeto online, acesse o link disponível no reposiótrio.
 ## Melhorias a serem implementadas
 * Loading State para a geração de imagens
 * Melhoria no design do Chat bem como responsividade
-* Sons do sistema não estão funcionando
+* Sons do sistema Funcionando!
