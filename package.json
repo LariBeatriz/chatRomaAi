@@ -1,0 +1,30 @@
+{
+  "name": "seu-projeto",
+  "version": "1.0.0",
+  "description": "Este repositório contém o projeto para a composição de notas da disciplina de Sistemas Distribuídos do curso de Análise e Desenvolvimento de Sistemas da Faculdade Nova Roma.",
+  "main": "index.js",
+  "scripts": {
+    "server": "node servidor/server.js",
+    "install": "npm install express socket.io axios dotenv openai",
+    "start": "npm run install && node servidor/server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "open": "^10.1.0",
+    "openai": "^4.70.2",
+    "socket.io": "^4.8.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LariBeatriz/chatRomaAi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LariBeatriz/chatRomaAi/issues"
+  },
+  "homepage": "https://github.com/LariBeatriz/chatRomaAi#readme"
+}
