@@ -17,20 +17,11 @@ body {
 }
 
 .sidebar {
-<<<<<<< HEAD
   width: 200px;
   padding: 20px;
   background-color: #f7f7f7;
   border-right: 1px solid #ccc;
   overflow-y: auto;
-=======
-  width: 200px; /* Define uma largura fixa para a barra lateral */
-  flex-shrink: 0; /* Impede que a barra lateral diminua */
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-right: 1px solid #ccc;
-  overflow-y: auto; /* Adiciona barra de rolagem caso a lista de usuários online seja grande */
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
 }
 
 .sidebar h3 {
@@ -47,18 +38,11 @@ body {
   background-color: #eee;
   margin-bottom: 5px;
   border-radius: 5px;
-<<<<<<< HEAD
   text-align: center;
 }
 
 .main-chat {
   flex: 1;
-=======
-}
-
-.main-chat {
-  flex: 1; /* Permite que a área de chat ocupe o espaço restante */
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -154,10 +138,6 @@ li span {
   color: gray;
 }
 
-<<<<<<< HEAD
-=======
-/* Estilo para imagens dentro do chat */
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
 li img {
   max-width: 100%;
   height: auto;
@@ -175,7 +155,6 @@ li img {
 
   .sidebar {
     width: 100%;
-<<<<<<< HEAD
     height: auto;
     display: flex;
     flex-direction: column;
@@ -207,19 +186,12 @@ li img {
     border-radius: 15px;
     font-size: 0.9em;
     text-align: center;
-=======
-    border-right: none;
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
-    flex-shrink: initial;
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
   }
 
   .main-chat {
     flex: 1;
     display: flex;
     flex-direction: column;
-<<<<<<< HEAD
     padding-top: 60px; /* Espaço para a barra de usuários */
     padding-bottom: 60px; /* Espaço para a barra de entrada */
   }
@@ -241,13 +213,6 @@ li img {
     bottom: 0;
     width: 100%;
     z-index: 1;
-=======
-    padding: 0 10px;
-  }
-
-  .input-container {
-    padding: 10px;
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
   }
 
   .sent, .received {

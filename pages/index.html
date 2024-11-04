@@ -6,7 +6,6 @@
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="/public/style/style.css">
 </head>
-<<<<<<< HEAD
 <body>
     <!-- Versão Desktop -->
     <div class="container desktop">
@@ -19,24 +18,6 @@
             <button class="signupBtn">Registrar-se</button>
         </div>
         <div class="formBx">
-=======
-
-<body>
-    <!-- Container principal, engloba todo o conteúdo da página -->
-    <div class="container">
-        <div class="box signin"> <!-- Caixa de login para usuários que já possuem conta -->
-            <h2>Já possui uma conta?</h2>
-            <button class="signinBtn">Entrar</button>
-        </div>
-        <div class="box signup"> <!-- Caixa de registro para novos usuários -->
-            <h2>Não possui uma conta?</h2>
-            <button class="signupBtn">Registrar-se</button>
-        </div>
-
-        <!-- Caixa de formulários (login e registro) -->
-        <div class="formBx">
-            <!-- Formulário de login -->
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
             <div class="form signinform">
                 <form id="loginForm">
                     <h3>Entrar</h3>
@@ -46,11 +27,6 @@
                     <a href="#" class="forgot">Esqueci a senha</a>
                 </form>
             </div>
-<<<<<<< HEAD
-=======
-
-            <!-- Formulário de registro -->
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
             <div class="form signupform">
                 <form id="signupForm">
                     <h3>Registrar-se</h3>
@@ -64,7 +40,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     <!-- Versão Mobile Simples -->
     <div class="container-mobile">
         <div class="formBx-mobile">
@@ -112,42 +87,11 @@
 
         // Registro de usuários - Desktop e Mobile
         const handleSignup = (username, email, password, passwordConfirm) => {
-=======
-                    <!--JAVASCRIPT-->
-    <script>
-        // Declarações de variáveis que retornam o 1º elemento que corresponder ao seletor (2 classes | 1 tag)
-        let signinBtn = document.querySelector('.signinBtn');
-        let signupBtn = document.querySelector('.signupBtn');
-        let body = document.querySelector('body');
-
-        // Alterna para o formulário de registro (adiciona o slide)
-        signupBtn.onclick = function () {
-            body.classList.add('slide');
-        }
-
-        // Alterna para o formilário de login (remove o slide)
-        signinBtn.onclick = function () {
-            body.classList.remove('slide');
-        }
-
-        // Registro de usuários
-        document.getElementById('signupForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Captura os valores do formulário de registro
-            const username = document.getElementById('signupUsername').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
-
-            // Validação de senha
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
             if (password !== passwordConfirm) {
                 alert("As senhas não coincidem!");
                 return;
             }
 
-<<<<<<< HEAD
             localStorage.setItem('username', username);
             localStorage.setItem('password', password);
             alert("Usuário registrado com sucesso!");
@@ -178,36 +122,12 @@
         const handleLogin = (username, password) => {
             const storedUsername = localStorage.getItem('username');
             const storedPassword = localStorage.getItem('password');
-=======
-            // Armazena o usuário e senha no localStorage
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
-
-            // Alerta de sucesso e redirecionamento para o chat
-            alert("Usuário registrado com sucesso!");
-            window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`;
-        });
-
-        // Login do usuário
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Captura os valores do formulário de login
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            // Recuperação dos dados do usuário salvos no localStorage
-            const storedUsername = localStorage.getItem('username');
-            const storedPassword = localStorage.getItem('password');
-            
-            // Validação de login (dados inseridos x dados armazenados -> comparação)
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
             if (username === storedUsername && password === storedPassword) {
                 alert("Login bem-sucedido!");
                 window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`;
             } else {
                 alert("Usuário ou senha incorretos.");
             }
-<<<<<<< HEAD
         };
 
         document.getElementById('loginForm').addEventListener('submit', function (e) {
@@ -224,8 +144,6 @@
                 document.getElementById('loginUsernameMobile').value,
                 document.getElementById('loginPasswordMobile').value
             );
-=======
->>>>>>> b55000412210205fa746e9f0c96586b0c8eeb6b9
         });
     </script>
 </body>
