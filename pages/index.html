@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="/public/style/style.css">
+    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres como UTF-8, para suporte a caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configura o layout responsivo para dispositivos móveis -->
+    <title>Login</title> <!-- Título da página -->
+    <link rel="stylesheet" type="text/css" href="/public/style/style.css"> <!-- Link para o arquivo de estilo CSS externo -->
 </head>
 <body>
     <!-- Versão Desktop -->
-    <div class="container desktop">
-        <div class="box signin">
+    <div class="container desktop"> <!-- Contêiner principal para a versão desktop -->
+        <div class="box signin"> <!-- Caixa para opção de login -->
             <h2>Já possui uma conta?</h2>
-            <button class="signinBtn">Entrar</button>
+            <button class="signinBtn">Entrar</button> <!-- Botão para mudar para a tela de login -->
         </div>
-        <div class="box signup">
+        <div class="box signup"> <!-- Caixa para opção de registro -->
             <h2>Não possui uma conta?</h2>
-            <button class="signupBtn">Registrar-se</button>
+            <button class="signupBtn">Registrar-se</button> <!-- Botão para mudar para a tela de registro -->
         </div>
-        <div class="formBx">
-            <div class="form signinform">
+        <div class="formBx"> <!-- Caixa que contém os formulários de login e registro -->
+            <div class="form signinform"> <!-- Formulário de login -->
                 <form id="loginForm">
                     <h3>Entrar</h3>
-                    <input type="text" placeholder="Usuário" id="loginUsername" required/>
-                    <input type="password" placeholder="Senha" id="loginPassword" required/>
-                    <input type="submit" value="Login"/>
-                    <a href="#" class="forgot">Esqueci a senha</a>
+                    <input type="text" placeholder="Usuário" id="loginUsername" required/> <!-- Campo para o nome de usuário -->
+                    <input type="password" placeholder="Senha" id="loginPassword" required/> <!-- Campo para senha -->
+                    <input type="submit" value="Login"/> <!-- Botão para enviar o formulário de login -->
+                    <a href="#" class="forgot">Esqueci a senha</a> <!-- Link para recuperação de senha -->
                 </form>
             </div>
-            <div class="form signupform">
+            <div class="form signupform"> <!-- Formulário de registro -->
                 <form id="signupForm">
                     <h3>Registrar-se</h3>
-                    <input type="text" placeholder="Usuário" id="signupUsername" required/>
-                    <input type="email" placeholder="Endereço de Email" id="signupEmail" required/>
-                    <input type="password" placeholder="Senha" id="signupPassword" required/>
-                    <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirm" required/>
-                    <input type="submit" value="Registrar"/>
+                    <input type="text" placeholder="Usuário" id="signupUsername" required/> <!-- Campo para nome de usuário -->
+                    <input type="email" placeholder="Endereço de Email" id="signupEmail" required/> <!-- Campo para email -->
+                    <input type="password" placeholder="Senha" id="signupPassword" required/> <!-- Campo para senha -->
+                    <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirm" required/> <!-- Campo para confirmar a senha -->
+                    <input type="submit" value="Registrar"/> <!-- Botão para enviar o formulário de registro -->
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Versão Mobile Simples -->
-    <div class="container-mobile">
-        <div class="formBx-mobile">
-            <div class="form signinform-mobile active">
+    <div class="container-mobile"> <!-- Contêiner principal para a versão mobile -->
+        <div class="formBx-mobile"> <!-- Caixa que contém os formulários de login e registro para mobile -->
+            <div class="form signinform-mobile active"> <!-- Formulário de login mobile, inicialmente visível -->
                 <form id="loginFormMobile">
                     <h3>Entrar</h3>
-                    <input type="text" placeholder="Usuário" id="loginUsernameMobile" required/>
-                    <input type="password" placeholder="Senha" id="loginPasswordMobile" required/>
-                    <input type="submit" value="Login"/>
-                    <a href="#" class="toggle-form">Não possui uma conta? Registrar-se</a>
+                    <input type="text" placeholder="Usuário" id="loginUsernameMobile" required/> <!-- Campo para nome de usuário -->
+                    <input type="password" placeholder="Senha" id="loginPasswordMobile" required/> <!-- Campo para senha -->
+                    <input type="submit" value="Login"/> <!-- Botão para enviar o formulário de login -->
+                    <a href="#" class="toggle-form">Não possui uma conta? Registrar-se</a> <!-- Link para alternar para o formulário de registro -->
                 </form>
             </div>
-            <div class="form signupform-mobile">
+            <div class="form signupform-mobile"> <!-- Formulário de registro mobile -->
                 <form id="signupFormMobile">
                     <h3>Registrar-se</h3>
-                    <input type="text" placeholder="Usuário" id="signupUsernameMobile" required/>
-                    <input type="email" placeholder="Endereço de Email" id="signupEmailMobile" required/>
-                    <input type="password" placeholder="Senha" id="signupPasswordMobile" required/>
-                    <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirmMobile" required/>
-                    <input type="submit" value="Registrar"/>
-                    <a href="#" class="toggle-form">Já possui uma conta? Entrar</a>
+                    <input type="text" placeholder="Usuário" id="signupUsernameMobile" required/> <!-- Campo para nome de usuário -->
+                    <input type="email" placeholder="Endereço de Email" id="signupEmailMobile" required/> <!-- Campo para email -->
+                    <input type="password" placeholder="Senha" id="signupPasswordMobile" required/> <!-- Campo para senha -->
+                    <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirmMobile" required/> <!-- Campo para confirmar senha -->
+                    <input type="submit" value="Registrar"/> <!-- Botão para enviar o formulário de registro -->
+                    <a href="#" class="toggle-form">Já possui uma conta? Entrar</a> <!-- Link para alternar para o formulário de login -->
                 </form>
             </div>
         </div>
@@ -69,36 +69,36 @@
     <!-- Scripts -->
     <script>
         // Alternância entre login e registro no desktop
-        const signinBtn = document.querySelector('.signinBtn');
-        const signupBtn = document.querySelector('.signupBtn');
+        const signinBtn = document.querySelector('.signinBtn'); // Botão de login desktop
+        const signupBtn = document.querySelector('.signupBtn'); // Botão de registro desktop
         const body = document.querySelector('body');
 
-        signinBtn.onclick = () => body.classList.remove('slide');
-        signupBtn.onclick = () => body.classList.add('slide');
+        signinBtn.onclick = () => body.classList.remove('slide'); // Mostra o formulário de login no desktop
+        signupBtn.onclick = () => body.classList.add('slide'); // Mostra o formulário de registro no desktop
 
         // Alternância entre login e registro no mobile
-        document.querySelectorAll('.toggle-form').forEach(link => {
+        document.querySelectorAll('.toggle-form').forEach(link => { // Alterna entre formulários mobile
             link.addEventListener('click', function(event) {
                 event.preventDefault();
-                document.querySelector('.signinform-mobile').classList.toggle('active');
-                document.querySelector('.signupform-mobile').classList.toggle('active');
+                document.querySelector('.signinform-mobile').classList.toggle('active'); // Mostra/oculta login
+                document.querySelector('.signupform-mobile').classList.toggle('active'); // Mostra/oculta registro
             });
         });
 
-        // Registro de usuários - Desktop e Mobile
+        // Função para registrar usuários - Desktop e Mobile
         const handleSignup = (username, email, password, passwordConfirm) => {
-            if (password !== passwordConfirm) {
+            if (password !== passwordConfirm) { // Verifica se as senhas coincidem
                 alert("As senhas não coincidem!");
                 return;
             }
 
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
+            localStorage.setItem('username', username); // Armazena o usuário no localStorage
+            localStorage.setItem('password', password); // Armazena a senha no localStorage
             alert("Usuário registrado com sucesso!");
-            window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`;
+            window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`; // Redireciona para o chat
         };
 
-        document.getElementById('signupForm').addEventListener('submit', function (e) {
+        document.getElementById('signupForm').addEventListener('submit', function (e) { // Evento de envio do formulário desktop
             e.preventDefault();
             handleSignup(
                 document.getElementById('signupUsername').value,
@@ -108,7 +108,7 @@
             );
         });
 
-        document.getElementById('signupFormMobile').addEventListener('submit', function (e) {
+        document.getElementById('signupFormMobile').addEventListener('submit', function (e) { // Evento de envio do formulário mobile
             e.preventDefault();
             handleSignup(
                 document.getElementById('signupUsernameMobile').value,
@@ -118,19 +118,19 @@
             );
         });
 
-        // Login de usuários - Desktop e Mobile
+        // Função para login de usuários - Desktop e Mobile
         const handleLogin = (username, password) => {
-            const storedUsername = localStorage.getItem('username');
-            const storedPassword = localStorage.getItem('password');
-            if (username === storedUsername && password === storedPassword) {
+            const storedUsername = localStorage.getItem('username'); // Pega o usuário do localStorage
+            const storedPassword = localStorage.getItem('password'); // Pega a senha do localStorage
+            if (username === storedUsername && password === storedPassword) { // Verifica se as credenciais estão corretas
                 alert("Login bem-sucedido!");
-                window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`;
+                window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`; // Redireciona para o chat
             } else {
-                alert("Usuário ou senha incorretos.");
+                alert("Usuário ou senha incorretos."); // Exibe mensagem de erro em caso de falha
             }
         };
 
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        document.getElementById('loginForm').addEventListener('submit', function (e) { // Evento de envio do formulário de login desktop
             e.preventDefault();
             handleLogin(
                 document.getElementById('loginUsername').value,
@@ -138,7 +138,7 @@
             );
         });
 
-        document.getElementById('loginFormMobile').addEventListener('submit', function (e) {
+        document.getElementById('loginFormMobile').addEventListener('submit', function (e) { // Evento de envio do formulário de login mobile
             e.preventDefault();
             handleLogin(
                 document.getElementById('loginUsernameMobile').value,

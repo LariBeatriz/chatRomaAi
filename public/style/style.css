@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
 
+/* Define estilos gerais */
 * {
     margin: 0;
     padding: 0;
@@ -8,6 +9,7 @@
 }
 
 body {
+    /* Centraliza o conteúdo da página e define o fundo */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,6 +21,7 @@ body {
 
 /* Container Desktop */
 .container.desktop {
+    /* Define o layout e tamanho do contêiner principal no desktop */
     position: relative;
     width: 800px;
     max-width: 90%; /* Responsividade para desktop */
@@ -30,6 +33,7 @@ body {
 }
 
 .container .box {
+    /* Estilo para cada caixa dentro do contêiner */
     position: relative;
     width: 50%;
     height: 100%;
@@ -43,6 +47,7 @@ body {
 }
 
 .container .box h2 {
+    /* Estilo do título em cada caixa */
     color: #8000ff;
     font-size: 1.2em;
     font-weight: 500;
@@ -50,6 +55,7 @@ body {
 }
 
 .container .box button {
+    /* Estilo para o botão de ação */
     cursor: pointer;
     padding: 10px 20px;
     background: #8000ff;
@@ -61,6 +67,7 @@ body {
 }
 
 .formBx {
+    /* Estilo da caixa de formulário */
     position: absolute;
     left: 50px;
     width: 350px;
@@ -75,10 +82,12 @@ body {
 }
 
 .slide .formBx {
+    /* Posição da caixa de formulário ao deslizar */
     left: 400px;
 }
 
 .formBx .form {
+    /* Contêiner de cada formulário (login e signup) */
     position: absolute;
     top: 0;
     left: 0;
@@ -92,26 +101,31 @@ body {
 }
 
 .formBx .form.signupform {
+    /* Posição do formulário de signup inicialmente fora de visão */
     top: 100%;
     transition-delay: 0s;
 }
 
 .slide .formBx .form.signupform {
+    /* Mostra o formulário de signup ao deslizar */
     top: 0;
     transition-delay: 1s;
 }
 
 .formBx .form.signinform {
+    /* Posição inicial do formulário de login */
     top: 0;
     transition-delay: 1s;
 }
 
 .slide .formBx .form.signinform {
+    /* Esconde o formulário de login ao deslizar */
     top: -100%;
     transition-delay: 0s;
 }
 
 .formBx .form form {
+    /* Estilo básico para os formulários */
     display: flex;
     flex-direction: column;
     padding: 0 50px;
@@ -119,6 +133,7 @@ body {
 }
 
 .formBx .form form h3 {
+    /* Estilo do título dentro dos formulários */
     font-size: 1.4em;
     color: #333;
     margin-bottom: 20px;
@@ -126,6 +141,7 @@ body {
 }
 
 .formBx .form form input {
+    /* Estilo dos campos de entrada */
     width: 100%;
     margin-bottom: 15px;
     padding: 10px;
@@ -136,6 +152,7 @@ body {
 }
 
 .formBx .form form input[type="submit"] {
+    /* Estilo do botão de envio */
     background: #8000ff;
     border: none;
     color: #fff;
@@ -145,6 +162,7 @@ body {
 }
 
 .forgot {
+    /* Estilo do link de esqueci minha senha */
     color: #999;
     letter-spacing: 0.05em;
     font-size: 0.8em;
@@ -152,17 +170,17 @@ body {
 
 /* Estilos Mobile (apenas .container-mobile) */
 .container-mobile {
-    display: none; /* Oculto no desktop */
+    /* Oculto na versão desktop */
+    display: none;
 }
 
 /* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {
-    /* Oculta a versão desktop */
+    /* Oculta a versão desktop e exibe a versão mobile */
     .container.desktop {
         display: none;
     }
 
-    /* Exibe a versão mobile */
     .container-mobile {
         display: block;
         width: 100%;
@@ -170,6 +188,7 @@ body {
     }
 
     .formBx-mobile {
+        /* Estilo para o contêiner de formulário na versão mobile */
         width: 100%;
         max-width: 400px;
         margin: 0 auto;
@@ -179,14 +198,17 @@ body {
     }
 
     .formBx-mobile .form {
-        display: none; /* Oculta ambos os formulários inicialmente */
+        /* Oculta ambos os formulários inicialmente */
+        display: none;
     }
 
     .formBx-mobile .form.active {
-        display: block; /* Exibe apenas o formulário ativo */
+        /* Exibe apenas o formulário ativo */
+        display: block;
     }
 
     .formBx-mobile h3 {
+        /* Estilo do título do formulário na versão mobile */
         font-size: 1.4em;
         color: #333;
         margin-bottom: 20px;
@@ -198,6 +220,7 @@ body {
     .formBx-mobile input[type="email"],
     .formBx-mobile input[type="password"],
     .formBx-mobile input[type="submit"] {
+        /* Estilo dos campos de entrada na versão mobile */
         width: 100%;
         margin-bottom: 15px;
         padding: 10px;
@@ -208,12 +231,14 @@ body {
     }
 
     .formBx-mobile input[type="submit"] {
+        /* Estilo do botão de envio na versão mobile */
         background: #8000ff;
         color: #fff;
         font-weight: bold;
     }
 
     .formBx-mobile .toggle-form {
+        /* Link para alternar entre formulários na versão mobile */
         display: block;
         text-align: center;
         color: #007bff;
@@ -223,6 +248,7 @@ body {
     }
 
     .formBx-mobile .toggle-form:hover {
+        /* Efeito de hover no link de alternância */
         text-decoration: underline;
     }
 }
@@ -230,6 +256,7 @@ body {
 /* Ajustes para telas muito pequenas */
 @media (max-width: 480px) {
     .formBx-mobile h3 {
+        /* Reduz tamanho do título para telas menores */
         font-size: 1.2em;
     }
 
@@ -237,11 +264,13 @@ body {
     .formBx-mobile input[type="email"],
     .formBx-mobile input[type="password"],
     .formBx-mobile input[type="submit"] {
+        /* Reduz padding e fonte nos campos de entrada */
         padding: 8px;
         font-size: 0.9em;
     }
 
     .formBx-mobile input[type="submit"] {
+        /* Ajuste de padding no botão de envio */
         padding: 8px;
     }
 }

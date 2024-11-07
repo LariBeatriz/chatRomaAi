@@ -1,10 +1,12 @@
 body {
+  /* Define a fonte padrão e o fundo para o corpo da página */
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
   margin: 0;
 }
 
 .chat-container {
+  /* Define o layout principal do contêiner de chat */
   display: flex;
   max-width: 1000px;
   height: 90vh;
@@ -17,6 +19,7 @@ body {
 }
 
 .sidebar {
+  /* Define a barra lateral para a lista de usuários online */
   width: 200px;
   padding: 20px;
   background-color: #f7f7f7;
@@ -25,15 +28,18 @@ body {
 }
 
 .sidebar h3 {
+  /* Remove o espaço acima do título na barra lateral */
   margin-top: 0;
 }
 
 .sidebar ul {
+  /* Remove estilos de lista padrão */
   list-style: none;
   padding: 0;
 }
 
 .sidebar ul li {
+  /* Estilo para cada usuário online na barra lateral */
   padding: 10px;
   background-color: #eee;
   margin-bottom: 5px;
@@ -42,6 +48,7 @@ body {
 }
 
 .main-chat {
+  /* Define o contêiner principal para o chat */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -49,6 +56,7 @@ body {
 }
 
 .input-container {
+  /* Contêiner da barra de entrada de mensagem */
   display: flex;
   padding: 15px;
   background-color: #f7f7f7;
@@ -56,6 +64,7 @@ body {
 }
 
 input {
+  /* Estilo para o campo de entrada de mensagem */
   flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
@@ -65,10 +74,12 @@ input {
 }
 
 input:focus {
+  /* Cor da borda quando o campo de entrada está focado */
   border-color: #007bff;
 }
 
 button {
+  /* Estilo para o botão de envio */
   padding: 10px 20px;
   background-color: #8000ff;
   color: white;
@@ -78,11 +89,13 @@ button {
 }
 
 button:disabled {
+  /* Estilo do botão quando está desabilitado */
   background-color: #ccc;
   cursor: not-allowed;
 }
 
 .messages-container {
+  /* Define o contêiner de mensagens para rolagem e exibição */
   flex: 1;
   overflow-y: auto;
   padding: 10px;
@@ -91,12 +104,14 @@ button:disabled {
 }
 
 ul {
+  /* Remove o estilo de lista padrão */
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
 li {
+  /* Estilo básico para cada mensagem */
   padding: 10px 15px;
   margin-bottom: 10px;
   border-radius: 15px;
@@ -105,6 +120,7 @@ li {
 }
 
 .sent {
+  /* Estilo para mensagens enviadas pelo usuário */
   text-align: right;
   background-color: #d1e7dd;
   margin-left: auto;
@@ -116,6 +132,7 @@ li {
 }
 
 .received {
+  /* Estilo para mensagens recebidas de outros usuários */
   text-align: left;
   background-color: #fafab1;
   margin-left: 0;
@@ -127,18 +144,21 @@ li {
 }
 
 li strong {
+  /* Nome do usuário em negrito acima da mensagem */
   display: block;
   font-size: 14px;
   margin-bottom: -10px;
 }
 
 li span {
+  /* Hora da mensagem com estilo menor e cor cinza */
   display: block;
   font-size: 12px;
   color: gray;
 }
 
 li img {
+  /* Estilo para imagens enviadas no chat */
   max-width: 100%;
   height: auto;
   border-radius: 10px;
@@ -147,6 +167,7 @@ li img {
 /* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {
   .chat-container {
+    /* Adapta o layout para uma coluna em telas menores */
     flex-direction: column;
     height: 100vh;
     max-width: 100%;
@@ -154,6 +175,7 @@ li img {
   }
 
   .sidebar {
+    /* Ajusta a barra lateral para ocupar toda a largura no topo */
     width: 100%;
     height: auto;
     display: flex;
@@ -169,11 +191,13 @@ li img {
   }
 
   .sidebar h3 {
+    /* Ajuste de tamanho do título na barra lateral para dispositivos móveis */
     margin: 0;
     font-size: 1.2em;
   }
 
   .sidebar ul {
+    /* Exibe usuários online em linha para economizar espaço */
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
@@ -181,6 +205,7 @@ li img {
   }
 
   .sidebar ul li {
+    /* Ajusta estilo de cada usuário online */
     padding: 5px 10px;
     background-color: #ddd;
     border-radius: 15px;
@@ -189,6 +214,7 @@ li img {
   }
 
   .main-chat {
+    /* Adapta o contêiner de mensagens para dispositivos móveis */
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -197,6 +223,7 @@ li img {
   }
 
   .messages-container {
+    /* Ajuste da altura do contêiner de mensagens para evitar sobreposição */
     flex: 1;
     overflow-y: auto;
     padding: 10px;
@@ -205,6 +232,7 @@ li img {
   }
 
   .input-container {
+    /* Define o campo de entrada de mensagem fixo na parte inferior */
     display: flex;
     padding: 10px;
     background-color: #f7f7f7;
@@ -216,6 +244,7 @@ li img {
   }
 
   .sent, .received {
+    /* Ajusta a largura máxima das mensagens em dispositivos móveis */
     max-width: 80%;
     padding: 8px;
   }
@@ -224,25 +253,30 @@ li img {
 /* Ajuste para telas muito pequenas, como smartphones */
 @media (max-width: 480px) {
   .sidebar ul li {
+    /* Estilo de cada usuário online para telas muito pequenas */
     padding: 8px;
     font-size: 14px;
   }
 
   .input-container {
+    /* Padding menor para o campo de entrada */
     padding: 8px;
   }
 
   input {
+    /* Tamanho reduzido para o campo de entrada */
     padding: 8px;
     font-size: 14px;
   }
 
   button {
+    /* Tamanho reduzido para o botão de envio */
     padding: 8px 16px;
     font-size: 14px;
   }
 
   .sent, .received {
+    /* Ajusta a largura máxima das mensagens para telas pequenas */
     max-width: 100%;
     font-size: 14px;
   }
