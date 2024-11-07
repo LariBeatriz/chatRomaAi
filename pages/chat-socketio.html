@@ -27,9 +27,14 @@
             <!-- Campo de entrada de mensagens e botão de envio -->
             <div class="input-container">
                 <input type="text" id="msgInput" placeholder="Digite sua mensagem..." /> <!-- Campo de entrada para digitar mensagens -->
-                <button onclick="enviar()">Enviar</button> <!-- Botão para enviar a mensagem, chama a função 'enviar' -->
+                <button id="sendButton" onclick="enviar()">Enviar</button> <!-- Botão para enviar a mensagem, chama a função 'enviar' -->
             </div>
         </div>
+    </div>
+
+    <!-- Spinner de loading -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script> <!-- Biblioteca Socket.IO para comunicação em tempo real -->

@@ -12,14 +12,10 @@ const MAX_HISTORY = 50; // Limite de mensagens armazenadas no histórico
 function chatHandler(io, socket) {
     // Evento disparado quando um usuário se conecta
     socket.on('userConnected', (username) => {
-        // Adiciona o usuário conectado à lista de usuários online
         onlineUsers[socket.id] = username;
-        io.emit('onlineUsers', Object.values(onlineUsers)); // Envia lista de usuários online para todos os clientes
-
-        // Envia o histórico de mensagens para o usuário que acabou de se conectar
+        io.emit('onlineUsers', Object.values(onlineUsers)); 
         socket.emit('messageHistory', messageHistory);
 
-        // Envia uma mensagem de boas-vindas para todos os usuários, incluindo um áudio
         const audioPath = '../public/audio/hello.mp3';
         io.emit('chat message', { sender: 'Sistema', message: `${username} entrou no chat.`, audioPath });
 
@@ -28,47 +24,53 @@ function chatHandler(io, socket) {
 
     // Evento disparado quando um usuário envia uma mensagem
     socket.on('chat message', async (msgData) => {
-        // Limita o tamanho do histórico de mensagens
         if (messageHistory.length >= MAX_HISTORY) {
-            messageHistory.shift(); // Remove a mensagem mais antiga
+            messageHistory.shift();
         }
-        messageHistory.push(msgData); // Adiciona a nova mensagem ao histórico
+        messageHistory.push(msgData);
 
-        // Exibe a mensagem no chat antes de processar comandos
-        io.emit('chat message', msgData);
+        const message = msgData.message.toLowerCase().trim();
 
-        // Tratamento de comandos específicos baseados no conteúdo da mensagem
-        if (msgData.message.startsWith('/texto ')) {
-            await processTextCommand(io, msgData); // Processa comando de texto
-        } else if (msgData.message.startsWith('/imagem ')) {
-            await processImageCommand(io, msgData); // Processa comando de imagem
-        } else if (msgData.message.startsWith('/gato')) {
-            const catImageUrl = await getCatImage(); // Obtém imagem de gato
+        // Emitir um evento de loading para o cliente
+        if (message.startsWith('/texto') || message.startsWith('/imagem') || message.startsWith('/gato') || message.startsWith('/cachorro') || message.startsWith('/raposa') || message.startsWith('/rick')) {
+            io.emit('loading');
+        }
+
+        // Tratamento de comandos específicos com atraso no `stopLoading`
+        if (message.startsWith('/texto ')) {
+            await processTextCommand(io, msgData);
+            setTimeout(() => io.emit('stopLoading'), 3000); // Atraso de 3 segundos para o spinner
+        } else if (message.startsWith('/imagem ')) {
+            await processImageCommand(io, msgData);
+            io.emit('stopLoading'); // Remove o spinner imediatamente
+        } else if (message.startsWith('/gato')) {
+            const catImageUrl = await getCatImage();
             if (catImageUrl) {
                 io.emit('chat message', { sender: '😺 Cat Bot', message: `<img src="${catImageUrl}" alt="cat image" />`, audioPath: '../public/audio/gato.mp3' });
             } else {
                 io.emit('chat message', { sender: 'Sistema', message: '❌ Erro ao obter a imagem de gato' });
             }
-        } else if (msgData.message.startsWith('/cachorro')) {
-            const dogImageUrl = await getDogImage(); // Obtém imagem de cachorro
+            setTimeout(() => io.emit('stopLoading'), 3000);
+        } else if (message.startsWith('/cachorro')) {
+            const dogImageUrl = await getDogImage();
             if (dogImageUrl) {
                 io.emit('chat message', { sender: '🐕 Dog Bot', message: `<img src="${dogImageUrl}" alt="dog image" />`, audioPath: '../public/audio/cachorro.mp3' });
             } else {
                 io.emit('chat message', { sender: 'Sistema', message: '❌ Erro ao buscar imagem de cachorro.' });
             }
-        } else if (msgData.message.startsWith('/raposa')) {
-            const foxImageUrl = await getFoxImage(); // Obtém imagem de raposa
+            setTimeout(() => io.emit('stopLoading'), 3000);
+        } else if (message.startsWith('/raposa')) {
+            const foxImageUrl = await getFoxImage();
             if (foxImageUrl) {
                 io.emit('chat message', { sender: '🦊 Fox Bot', message: `<img src="${foxImageUrl}" alt="fox image" />`, audioPath: '../public/audio/raposa.mp3' });
             } else {
                 io.emit('chat message', { sender: 'Sistema', message: '❌ Erro ao obter a imagem de raposa.' });
             }
-        } else if (msgData.message.startsWith('/rick ')) {
-            // Extrai o nome do personagem para busca e obtém dados do personagem do Rick and Morty
+            setTimeout(() => io.emit('stopLoading'), 3000);
+        } else if (message.startsWith('/rick ')) {
             const characterName = msgData.message.slice(6).trim();
             const character = await getRickAndMortyCharacter(characterName);
             if (character) {
-                // Exibe as informações do personagem em um card estilizado
                 const characterInfo = `
                     <div style="
                         background-color: #f8f9fa;
@@ -104,16 +106,18 @@ function chatHandler(io, socket) {
             } else {
                 io.emit('chat message', { sender: 'Rick and Morty Bot', message: '❌ Personagem não encontrado. Tente outro nome!' });
             }
+            setTimeout(() => io.emit('stopLoading'), 3000);
+        } else {
+            // Emita a mensagem normal aqui, apenas se não houver comandos específicos.
+            io.emit('chat message', msgData);
         }
     });
 
     // Evento disparado quando um usuário se desconecta
     socket.on('disconnect', () => {
         const disconnectedUser = onlineUsers[socket.id];
-        delete onlineUsers[socket.id]; // Remove o usuário da lista de online
-        io.emit('onlineUsers', Object.values(onlineUsers)); // Atualiza a lista de usuários online
-
-        // Envia uma mensagem de saída para os usuários restantes, incluindo um áudio de saída
+        delete onlineUsers[socket.id];
+        io.emit('onlineUsers', Object.values(onlineUsers));
         const audioPath = '../public/audio/saida.mp3';
         io.emit('chat message', { sender: 'Sistema', message: `${disconnectedUser} saiu do chat.`, audioPath });
 
@@ -121,5 +125,4 @@ function chatHandler(io, socket) {
     });
 }
 
-// Exporta a função chatHandler para uso em outras partes da aplicação
 module.exports = { chatHandler };

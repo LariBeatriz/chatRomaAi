@@ -5,6 +5,32 @@ body {
   margin: 0;
 }
 
+/* Estilo do Spinner */
+.loading {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-style: italic;
+  font-size: 18px; /* Aumenta o tamanho do texto */
+}
+
+.loading .spinner {
+  width: 24px; /* Aumenta o tamanho do spinner */
+  height: 24px;
+  border: 3px solid #ccc;
+  border-top: 3px solid #555;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 10px; /* Espaço entre o spinner e o texto */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
 .chat-container {
   /* Define o layout principal do contêiner de chat */
   display: flex;

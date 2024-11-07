@@ -9,6 +9,7 @@ socket.emit('userConnected', username);
 // Exibir mensagens recebidas no lado esquerdo ou direito com o nome e a hora
 socket.on("chat message", (msgData) => {
     exibirMensagem(msgData);
+
     // Reproduzir som se a mensagem tiver um caminho de áudio
     if (msgData.audioPath) {
         const audio = new Audio(msgData.audioPath);
@@ -16,6 +17,19 @@ socket.on("chat message", (msgData) => {
             console.error("Erro ao reproduzir o som:", error);
         });
     }
+
+    // Oculta o spinner quando a mensagem é recebida
+    hideBotLoading();
+});
+
+// Exibir o spinner de loading quando o evento 'loading' for emitido pelo servidor
+socket.on('loading', () => {
+    showBotLoading();
+});
+
+// Remover o spinner de loading quando o evento 'stopLoading' for emitido pelo servidor
+socket.on('stopLoading', () => {
+    hideBotLoading();
 });
 
 // Atualiza a lista de usuários online
@@ -33,34 +47,61 @@ socket.on("onlineUsers", (users) => {
 
 // Adicionar evento para receber histórico de mensagens
 socket.on('messageHistory', (history) => {
-    // Limpar mensagens existentes
     const ul = document.querySelector('#messages');
-    ul.innerHTML = '';
-    
+    ul.innerHTML = ''; // Limpar mensagens existentes
+
     // Exibir cada mensagem do histórico
     history.forEach(msgData => {
         exibirMensagem(msgData);
-        // Reproduzir som se a mensagem tiver um caminho de áudio
-        if (msgData.audioPath) {
-            const audio = new Audio(msgData.audioPath);
-            audio.play().catch(error => {
-                console.error("Erro ao reproduzir o som:", error);
-            });
-        }
     });
 });
 
 // Enviar mensagens
 function enviar() {
     const input = document.querySelector('#msgInput');
-    const msg = input.value;
+    const msg = input.value.trim();
 
-    if (msg.trim() !== "") { // Verifica se a mensagem não está vazia
-        // Envia a mensagem para o servidor
+    if (msg !== "") { // Verifica se a mensagem não está vazia
         const audioPath = '../public/audio/mensagem.mp3';
+
+        // Exibe imediatamente a mensagem do usuário no chat apenas para comandos
+        if (msg.startsWith('/')) {
+            exibirMensagem({ sender: username, message: msg, audioPath: audioPath });
+        }
+
+        // Envia a mensagem para o servidor para processamento
         socket.emit("chat message", { sender: username, message: msg, audioPath: audioPath });
         
         input.value = ""; // Limpa o campo de entrada
+    }
+}
+
+// Função para exibir o spinner de loading
+function showBotLoading() {
+    const ul = document.querySelector('#messages');
+    const loadingLi = document.createElement('li');
+    loadingLi.id = 'botLoading';
+    loadingLi.classList.add('loading');
+    
+    const spinner = document.createElement('div');
+    spinner.classList.add('spinner'); // Adiciona o spinner
+
+    const loadingText = document.createElement('span');
+    loadingText.textContent = 'Silêncio, Robozinho Trabalhando...';
+
+    loadingLi.appendChild(spinner);
+    loadingLi.appendChild(loadingText);
+    ul.appendChild(loadingLi);
+
+    const container = document.querySelector('.messages-container');
+    container.scrollTop = container.scrollHeight;
+}
+
+// Função para ocultar o spinner de loading
+function hideBotLoading() {
+    const loadingLi = document.getElementById('botLoading');
+    if (loadingLi) {
+        loadingLi.remove();
     }
 }
 
@@ -70,14 +111,12 @@ function exibirMensagem(msgData) {
     const li = document.createElement('li');
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    // Aplica classes CSS diferentes para mensagens enviadas e recebidas
     if (msgData.sender === username) {
-        li.classList.add('sent'); // Classe para mensagens enviadas pelo usuário
+        li.classList.add('sent');
     } else {
-        li.classList.add('received'); // Classe para mensagens recebidas de outros usuários
+        li.classList.add('received');
     }
 
-    // Verifica se a mensagem contém HTML (como no caso do card do Rick and Morty)
     if (msgData.message.includes('<div') || msgData.message.includes('<img')) {
         li.innerHTML = `<strong>${msgData.sender}</strong><br>${msgData.message}<span>${time}</span>`;
     } else {
@@ -86,7 +125,6 @@ function exibirMensagem(msgData) {
 
     ul.appendChild(li);
 
-    // Rolagem automática para a última mensagem
     const container = document.querySelector('.messages-container');
     container.scrollTop = container.scrollHeight;
 }
@@ -102,4 +140,3 @@ document.getElementById('msgInput').addEventListener('keypress', function(event)
 window.addEventListener("beforeunload", function () {
     document.getElementById("exitSound").play();
 });
-
