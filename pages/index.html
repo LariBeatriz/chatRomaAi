@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="/public/style/style.css">
+</head>
+<body>
+    <!-- Versão Desktop -->
+    <div class="container desktop">
+        <div class="box signin">
+            <h2>Já possui uma conta?</h2>
+            <button class="signinBtn">Entrar</button>
+        </div>
+        <div class="box signup">
+            <h2>Não possui uma conta?</h2>
+            <button class="signupBtn">Registrar-se</button>
+        </div>
+        <div class="formBx">
+            <div class="form signinform">
+                <form id="loginForm">
+                    <h3>Entrar</h3>
+                    <input type="text" placeholder="Usuário" id="loginUsername" required/>
+                    <input type="password" placeholder="Senha" id="loginPassword" required/>
+                    <input type="submit" value="Login"/>
+                    <a href="#" class="forgot">Esqueci a senha</a>
+                </form>
+            </div>
+            <div class="form signupform">
+                <form id="signupForm">
+                    <h3>Registrar-se</h3>
+                    <input type="text" placeholder="Usuário" id="signupUsername" required/>
+                    <input type="email" placeholder="Endereço de Email" id="signupEmail" required/>
+                    <input type="password" placeholder="Senha" id="signupPassword" required/>
+                    <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirm" required/>
+                    <input type="submit" value="Registrar"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Versão Mobile Simples -->
+    <div class="container-mobile">
+        <div class="formBx-mobile">
+            <div class="form signinform-mobile active">
+                <form id="loginFormMobile">
+                    <h3>Entrar</h3>
+                    <input type="text" placeholder="Usuário" id="loginUsernameMobile" required/>
+                    <input type="password" placeholder="Senha" id="loginPasswordMobile" required/>
+                    <input type="submit" value="Login"/>
+                    <a href="#" class="toggle-form">Não possui uma conta? Registrar-se</a>
+                </form>
+            </div>
+            <div class="form signupform-mobile">
+                <form id="signupFormMobile">
+                    <h3>Registrar-se</h3>
+                    <input type="text" placeholder="Usuário" id="signupUsernameMobile" required/>
+                    <input type="email" placeholder="Endereço de Email" id="signupEmailMobile" required/>
+                    <input type="password" placeholder="Senha" id="signupPasswordMobile" required/>
+                    <input type="password" placeholder="Confirmar a Senha" id="signupPasswordConfirmMobile" required/>
+                    <input type="submit" value="Registrar"/>
+                    <a href="#" class="toggle-form">Já possui uma conta? Entrar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Alternância entre login e registro no desktop
+        const signinBtn = document.querySelector('.signinBtn');
+        const signupBtn = document.querySelector('.signupBtn');
+        const body = document.querySelector('body');
+
+        signinBtn.onclick = () => body.classList.remove('slide');
+        signupBtn.onclick = () => body.classList.add('slide');
+
+        // Alternância entre login e registro no mobile
+        document.querySelectorAll('.toggle-form').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                document.querySelector('.signinform-mobile').classList.toggle('active');
+                document.querySelector('.signupform-mobile').classList.toggle('active');
+            });
+        });
+
+        // Registro de usuários - Desktop e Mobile
+        const handleSignup = (username, email, password, passwordConfirm) => {
+            if (password !== passwordConfirm) {
+                alert("As senhas não coincidem!");
+                return;
+            }
+
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+            alert("Usuário registrado com sucesso!");
+            window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`;
+        };
+
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleSignup(
+                document.getElementById('signupUsername').value,
+                document.getElementById('signupEmail').value,
+                document.getElementById('signupPassword').value,
+                document.getElementById('signupPasswordConfirm').value
+            );
+        });
+
+        document.getElementById('signupFormMobile').addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleSignup(
+                document.getElementById('signupUsernameMobile').value,
+                document.getElementById('signupEmailMobile').value,
+                document.getElementById('signupPasswordMobile').value,
+                document.getElementById('signupPasswordConfirmMobile').value
+            );
+        });
+
+        // Login de usuários - Desktop e Mobile
+        const handleLogin = (username, password) => {
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+            if (username === storedUsername && password === storedPassword) {
+                alert("Login bem-sucedido!");
+                window.location.href = `/pages/chat-socketio.html?username=${encodeURIComponent(username)}`;
+            } else {
+                alert("Usuário ou senha incorretos.");
+            }
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleLogin(
+                document.getElementById('loginUsername').value,
+                document.getElementById('loginPassword').value
+            );
+        });
+
+        document.getElementById('loginFormMobile').addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleLogin(
+                document.getElementById('loginUsernameMobile').value,
+                document.getElementById('loginPasswordMobile').value
+            );
+        });
+    </script>
+</body>
+</html>

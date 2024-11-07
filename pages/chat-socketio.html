@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+    <link rel="stylesheet" href="../public/style/chat-style.css" />
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Barra lateral que mostra os usuários online -->
+        <div class="sidebar">
+            <h3>Usuários Online</h3>
+            <ul id="onlineUsers"></ul> <!-- Lista que será preenchida dinamicamente com os usuários online -->
+        </div>
+
+        <!-- Área principal do chat -->
+        <div class="main-chat">
+            <!-- Contêiner para exibir as mensagens do chat -->
+            <div id="messages-container" class="messages-container">
+                <ul id="messages"></ul> <!-- Lista de mensagens, preenchida dinamicamente -->
+            </div>
+
+            <!-- Campo de entrada de mensagens e botão de envio -->
+            <div class="input-container">
+                <input type="text" id="msgInput" placeholder="Digite sua mensagem..." />
+                <button onclick="enviar()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../public/Scripts/chat.js"></script>
+</body>
+</html>
