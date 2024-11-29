@@ -10,7 +10,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 async function createChatCompletion(message) {
     // Envia a mensagem do usuário para a API e recebe a resposta
     const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "ft:gpt-4o-2024-08-06:faculdade-nova-roma:teste:AWSw8xR3",
         messages: [{ role: "user", content: message }],
         max_tokens: 150,
         temperature: 0.7
