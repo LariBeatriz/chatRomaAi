@@ -39,7 +39,7 @@ server.listen(PORT, async () => {
 
     // Carrega o módulo `open` de forma dinâmica e abre a página de login
     const open = await import('open'); // Importa dinamicamente o módulo `open` para abrir URLs
-    open.default(`http://localhost:${PORT}/login`); // Abre a URL de login no navegador padrão
+    open.default(`https://ideal-space-fishstick-px99jgg59w736p4r-3000.app.github.dev/pages/index.html`); // Abre a URL de login no navegador padrão
 });
 
 module.exports = { app, server }; // Exporta a instância do Express e o servidor para outros módulos
