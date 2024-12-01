@@ -5,6 +5,26 @@ body {
   margin: 0;
 }
 
+.chat-header {
+  text-align: center;
+  background-color: #f4f4f4; /* Cor de fundo do cabeçalho */
+  padding: 20px;
+  border-bottom: 2px solid #ddd; /* Linha de separação */
+  margin-bottom:16px
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333; /* Cor do título */
+}
+
+.chat-header p {
+  margin: 5px 0 0;
+  font-size: 1em;
+  color: #666; /* Cor do subtítulo */
+}
+
 /* Estilo para mensagens enviadas pelo usuário atual (lado direito) */
 .sent {
   background-color: #cce5ff; /* Azul claro */
@@ -112,6 +132,7 @@ li {
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin-bottom:16px;
 }
 
 .sidebar {
