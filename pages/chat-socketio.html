@@ -1,25 +1,19 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat</title>
-    <link rel="stylesheet" href="../public/style/chat-style.css" />
+    <meta charset="UTF-8" /> <!-- Define o conjunto de caracteres para UTF-8, suportando caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Ajusta o layout para dispositivos móveis -->
+    <title>Chat</title> <!-- Título da página, exibido na aba do navegador -->
+    <link rel="stylesheet" href="../public/style/chat-style.css" /> <!-- Link para o arquivo de estilo CSS da página -->
 </head>
 
 <body>
-    <!-- Cabeçalho do chat -->
-    <header class="chat-header">
-        <h1>Bem-vindo ao Chat do JavaScript</h1>
-        <p>Aqui você pode conversar, explorar funcionalidades e aprender programação de forma interativa.</p>
-    </header>
-
     <div class="chat-container"> <!-- Contêiner principal do chat -->
         
         <!-- Barra lateral que mostra os usuários online -->
         <div class="sidebar">
-            <h3>Usuários Online</h3>
-            <ul id="onlineUsers"></ul>
+            <h3>Usuários Online</h3> <!-- Título da seção de usuários online -->
+            <ul id="onlineUsers"></ul> <!-- Lista que será preenchida dinamicamente com os usuários online -->
         </div>
 
         <!-- Área principal do chat -->
@@ -27,13 +21,13 @@
             
             <!-- Contêiner para exibir as mensagens do chat -->
             <div id="messages-container" class="messages-container">
-                <ul id="messages"></ul>
+                <ul id="messages"></ul> <!-- Lista de mensagens, preenchida dinamicamente -->
             </div>
 
             <!-- Campo de entrada de mensagens e botão de envio -->
             <div class="input-container">
-                <input type="text" id="msgInput" placeholder="Digite sua mensagem..." />
-                <button id="sendButton" onclick="enviar()">Enviar</button>
+                <input type="text" id="msgInput" placeholder="Digite sua mensagem..." /> <!-- Campo de entrada para digitar mensagens -->
+                <button id="sendButton" onclick="enviar()">Enviar</button> <!-- Botão para enviar a mensagem, chama a função 'enviar' -->
             </div>
         </div>
     </div>
@@ -43,7 +37,7 @@
         <div class="spinner"></div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="../public/Scripts/chat.js"></script>
+    <script src="/socket.io/socket.io.js"></script> <!-- Biblioteca Socket.IO para comunicação em tempo real -->
+    <script src="../public/Scripts/chat.js"></script> <!-- Script JavaScript para funcionalidades do chat -->
 </body>
 </html>
