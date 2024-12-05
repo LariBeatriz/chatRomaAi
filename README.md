@@ -43,3 +43,12 @@ Para visualizar o projeto online, acesse o link disponível no reposiótrio.
 * Loading State para a geração de imagens
 * Melhoria no design do Chat bem como responsividade
 * Sons do sistema Funcionando!
+
+
+## Membros do Grupo
+
+* Ana Beatriz
+* Laysa Vasconcelos
+* Larissa Aguiar
+* Marcella Carvalho
+* Pedro Oliveira
